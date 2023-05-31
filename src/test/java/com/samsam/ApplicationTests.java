@@ -5,10 +5,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import com.samsam.repository.ProfileRepository;
-import com.samsam.repository.TestVORepository;
 import com.samsam.repository.UserRepository;
 import com.samsam.vo.ProfileVO;
-import com.samsam.vo.TestVO;
 import com.samsam.vo.UserVO;
 
 @SpringBootTest
