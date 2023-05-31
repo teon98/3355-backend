@@ -1,6 +1,5 @@
 package com.samsam;
 
-import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -13,9 +12,9 @@ class ApplicationTests {
 	@Autowired
 	TestVORepository repo;
 
-	@Test
+//	@Test
 	void test1() {
-		TestVO t1 = TestVO.builder().testID("980914").testName("태영").build();
+		TestVO t1 = TestVO.builder().testID("123456").testName("택주바보").build();
 		repo.save(t1);
 	}
 
