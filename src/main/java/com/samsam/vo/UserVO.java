@@ -1,5 +1,7 @@
 package com.samsam.vo;
 
+import java.io.Serializable;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -19,11 +21,17 @@ import lombok.NoArgsConstructor;
 @Table(name="users")
 @Entity
 @Data
-public class UserVO {
+public class UserVO implements Serializable {
+
+	private static final long serialVersionUID = 1L;
 	@Id
 	@SequenceGenerator(name="USERS_SEQUENCE_GENERATOR", sequenceName = "USERS_SEQUENCE", initialValue = 1, allocationSize = 1)
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator = "USERS_SEQUENCE_GENERATOR")
 	private Integer userNo;
+	
+	
+	@Column(nullable = false, unique = true)
+	private String userNickname;
 	@Column(nullable = false, unique = true)
 	private String userEmail;
 	@Column(nullable = false)
@@ -32,4 +40,5 @@ public class UserVO {
 	private Integer userBirth;
 	@Column(nullable = false)
 	private Integer userGender;
-}
+} 
+	 
