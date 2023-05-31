@@ -2,14 +2,11 @@ package com.samsam.vo;
 
 import java.io.Serializable;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
@@ -42,12 +39,6 @@ public class UserVO implements Serializable {
 	@Column(nullable = false)
 	private Integer userBirth;
 	@Column(nullable = false)
-	private Integer userGender;  
+	private Integer userGender;
+} 
 	 
-	/*
-	 * @OneToOne
-	 * 
-	 * @JoinColumn(name="profile_id") ProfileVO profile;
-	 */
-  
-}
