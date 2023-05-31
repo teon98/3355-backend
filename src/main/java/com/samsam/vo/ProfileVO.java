@@ -1,6 +1,6 @@
 package com.samsam.vo;
 
-import java.io.Serializable;
+import java.io.Serializable; 
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
