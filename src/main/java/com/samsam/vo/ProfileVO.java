@@ -1,6 +1,6 @@
 package com.samsam.vo;
 
-import java.io.Serializable;
+import java.io.Serializable; 
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -37,7 +37,7 @@ public class ProfileVO implements Serializable{
 	
 	@Column(nullable = true)
 	private String profileLevel;
-	@Column(length = 4000)
+	@Column(length = 1000)
 	private String profileImg;
 	@Column(length = 450)
 	private String profileAbout;  
