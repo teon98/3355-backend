@@ -19,12 +19,12 @@ class ApplicationTests {
 	
 	@Test
 	void test3() {
-		ProfileVO p1 = ProfileVO.builder()
+		ProfileVO p = ProfileVO.builder()
 				.profileLevel("골드3")
 				.profileAbout("안녕하세요3")
 				.build();
 		
-		ProfileVO p2 = prepo.save(p1);
+		ProfileVO p2 = prepo.save(p);
 		
 		UserVO user = urepo.findById(1).orElse(null);
 		System.out.println(user);
@@ -36,8 +36,8 @@ class ApplicationTests {
 	//@Test
 	void test2() {
 		UserVO u1 = UserVO.builder()
-				.userNickname("지만")
-				.userEmail("지만@지만")
+				.userNickname("지만1")
+				.userEmail("지만@지만1")
 				.userPass("1234")
 				.userBirth(980420)
 				.userGender(1)
