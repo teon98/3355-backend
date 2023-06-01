@@ -1,9 +1,5 @@
 package com.samsam.vo;
 
-import java.io.Serializable;
-import java.sql.Timestamp;
-
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -13,37 +9,34 @@ import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
-import org.hibernate.annotations.UpdateTimestamp;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
-//태영
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name="comments")
+@Table(name="posttag")
 @Entity
+@ToString
 @Data
-public class CommentVO implements Serializable{
-	
+public class PostTagVO {
 	private static final long serialVersionUID = 1L;
 	@Id
-	@SequenceGenerator(name="COMM_SEQUENCE_GENERATOR", sequenceName = "COMM_SEQUENCE", initialValue = 500, allocationSize = 1)
-	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator = "COMM_SEQUENCE_GENERATOR")
-	private Integer commNo;
-	@Column(length=300)
-	private String commContent;
-	@UpdateTimestamp
-	private Timestamp commDate;
+	@SequenceGenerator(name="PT_SEQUENCE_GENERATOR", sequenceName = "PT_SEQUENCE", initialValue = 1, allocationSize = 1)
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator = "PT_SEQUENCE_GENERATOR")
+	private Integer ptNo;
 	
 	@ManyToOne
 	@JoinColumn(name="post_no")
 	private PostVO post;
 	
 	@ManyToOne
-	@JoinColumn(name="user_no")
-	private UserVO commuser;
+	@JoinColumn(name="tag_no")
+	private TagVO tag;
+	
 }
