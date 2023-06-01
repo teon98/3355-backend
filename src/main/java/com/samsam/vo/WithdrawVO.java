@@ -19,30 +19,36 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "points")
+@Table(name = "withdraws")
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class PointVO {
+public class WithdrawVO {
+	
 	@Id
-	@SequenceGenerator(name="POINTS_SEQUENCE_GENERATOR", sequenceName = "POINTS_SEQUENCE", initialValue = 1, allocationSize = 1)
-	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator = "POINTS_SEQUENCE_GENERATOR")
-	private Integer pointNo;
+	@SequenceGenerator(name="WITHDRAWS_SEQUENCE_GENERATOR", sequenceName = "WITHDRAWS_SEQUENCE", initialValue = 1, allocationSize = 1)
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator = "WITHDRAWS_SEQUENCE_GENERATOR")
+	private Integer withdrawNo;
+	
+	@Column(nullable = true)
+	private Integer withdrawCash;
 	
 	@Column(nullable = false)
-	private Integer pointSave;
+	private Integer withdrawHistory;
 	
-	@Column(nullable = false)
-	private String pointMemo;
-	
-	@Column(nullable = false)
-	private Integer pointHistory;
+	@Column(nullable = true)
+	private Integer withdrawPoint;
 	
 	@Column(nullable = false)
 	@CreationTimestamp
-	private Timestamp pointDate;
+	private Timestamp withdrawDate;
 	
 	@ManyToOne
 	private CardVO card;
+	
+	@ManyToOne
+	private StoreVO store;
+	
+
 }
