@@ -1,26 +1,33 @@
 package com.samsam.vo;
 
 import java.io.Serializable;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name="users")
 @Entity
-@Data 
+@ToString
+@Getter @Setter
 public class UserVO implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -40,5 +47,6 @@ public class UserVO implements Serializable {
 	private Integer userBirth;
 	@Column(nullable = false)
 	private Integer userGender;
+	
 } 
 	 
