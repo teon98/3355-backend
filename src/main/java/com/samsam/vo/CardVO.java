@@ -40,10 +40,12 @@ public class CardVO {
 	private Integer cardPass;
 	
 	@Column(nullable = false)
-	private Integer accountBalance;
+	@Builder.Default
+	private Integer accountBalance = 0;
 	
 	@Column(nullable = false)
-	private Integer pointBalance;
+	@Builder.Default
+	private Integer pointBalance = 0;
 	
 	@Column(nullable = false)
 	@CreationTimestamp

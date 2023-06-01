@@ -79,7 +79,6 @@ public class JimanTest {
 	//@Test//프로필 생성
 	void test3() {
 		ProfileVO p = ProfileVO.builder()
-				.profileLevel("골드3")
 				.profileAbout("안녕하세요3")
 				.build();
 		

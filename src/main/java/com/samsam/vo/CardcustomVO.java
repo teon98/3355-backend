@@ -1,7 +1,5 @@
 package com.samsam.vo;
 
-import java.sql.Timestamp;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -11,35 +9,33 @@ import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
-import org.hibernate.annotations.CreationTimestamp;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "deposits")
+@Table(name = "cardcustoms")
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class DepositVO {
+public class CardcustomVO {
+	
 	@Id
-	@SequenceGenerator(name="DEPOSITS_SEQUENCE_GENERATOR", sequenceName = "DEPOSITS_SEQUENCE", initialValue = 1, allocationSize = 1)
-	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator = "DEPOSITS_SEQUENCE_GENERATOR")
-	private Integer depositNo;
+	@SequenceGenerator(name="CARDCUSTOMS_SEQUENCE_GENERATOR", sequenceName = "CARDCUSTOMS_SEQUENCE", initialValue = 1, allocationSize = 1)
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator = "CARDCUSTOMS_SEQUENCE_GENERATOR")
+	private Integer customNo;
 	
 	@Column(nullable = false)
-	private Integer depositCash;
+	@Builder.Default
+	private String customColor = "gray";
 	
-	@Column(nullable = false)
-	private Integer depositHistory;
-	
-	@Column(nullable = false)
-	@CreationTimestamp
-	private Timestamp depositDate;
+	@Column(nullable = true, length = 30)
+	@Builder.Default
+	private String customLettering = "";
 	
 	@ManyToOne
 	private CardVO card;
+
 }
