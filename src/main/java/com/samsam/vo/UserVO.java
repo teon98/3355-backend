@@ -43,11 +43,12 @@ public class UserVO implements Serializable {
 	@Column(nullable = false, unique = true)
 	private String userEmail;
 	@Column(nullable = false)
-	private String userPass;
+	private String userPass; 
 	@Column(nullable = false)
 	private Integer userBirth;
 	@Column(nullable = false)
 	private Integer userGender;
+	
 	@OneToMany(mappedBy="user",cascade = CascadeType.ALL)
 	private List<WorkVO> work; 
 	@OneToOne(mappedBy = "user",cascade = CascadeType.ALL)
