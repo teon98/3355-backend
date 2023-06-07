@@ -3,6 +3,9 @@ package com.samsam;
 import java.util.List;
 import java.util.stream.IntStream;
 
+import javax.transaction.Transactional;
+
+import org.apache.catalina.User;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -24,15 +27,24 @@ public class TaeyoungTest {
 	@Autowired
 	CommRepository commRepo;
 	
-	@Test
-	void test4() {
-		//특정 board의 모든 댓글 조회하기
-		postRepo.findById(5).ifPresent(post ->{
-			List<CommentVO> comms = post.getComms();
-			for(CommentVO comm:comms) {
-				System.out.println(comm);
-			}
+	
+	//@Test
+	void test5() {
+		//특정 user가 자신의 모든 post 조회하기
+		UserVO user = userRepo.findById(2).get();
+		postRepo.findByUser(user).forEach(post ->{
+			System.out.println(post);
 		});
+	}
+	
+	//@Test
+	void test4() {
+		//특정 post의 모든 댓글 조회하기
+		PostVO post = postRepo.findById(5).get();
+		commRepo.findByPost(post).forEach(comm ->{
+			System.out.println(comm);
+		});
+		
 	}
 	
 	//@Test
@@ -44,7 +56,7 @@ public class TaeyoungTest {
 		CommentVO comm = CommentVO.builder()
 				.commContent("두번째 댓글입니다")
 				.post(post)
-				.user(user)
+				.commuser(user)
 				.build();
 		
 		commRepo.save(comm);
