@@ -11,6 +11,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
@@ -47,6 +48,13 @@ public class UserVO implements Serializable {
 	private Integer userBirth;
 	@Column(nullable = false)
 	private Integer userGender;
-	
+	@OneToMany(mappedBy="user",cascade = CascadeType.ALL)
+	private List<WorkVO> work; 
+	@OneToOne(mappedBy = "user",cascade = CascadeType.ALL)
+	private ProfileVO profile;
+	@OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
+	private List<DailyStampVO> dailyStamp;
+	@OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
+	private List<PostVO> post;
 } 
 	 

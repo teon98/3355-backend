@@ -42,7 +42,7 @@ public class ProfileVO implements Serializable{
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator = "PROFILES_SEQUENCE_GENERATOR")
 //	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Integer profileId;
-	
+	 
 
 	@Enumerated(EnumType.STRING)//열거형 타입중 문자만 저장
 	@Builder.Default
@@ -52,7 +52,7 @@ public class ProfileVO implements Serializable{
 	@Column(length = 450)
 	private String profileAbout;  
 	 
-	@OneToOne(cascade = CascadeType.ALL) 
+	@OneToOne
 	@JoinColumn(name="user_no")
 	UserVO user; 
 	 
