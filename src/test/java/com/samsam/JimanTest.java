@@ -37,6 +37,20 @@ public class JimanTest {
 	@Autowired
 	AlarmRepository arepo;
 	
+	@Test//이메일로 유저 조회
+	void test10() {
+		String message = "";
+		UserVO user =urepo.findByUserEmail("지만@지만");
+		
+		if(user.getUserEmail().length()>1) {
+			message ="이미 사용중인 이메일입니다.";
+		}else{
+			message ="사용 가능한 이메일입니다.";
+		}
+		System.out.println(message);
+		
+	}
+	
 	//@Test//내 프로필 조회
 	 void test9() {
 		UserVO user1 = urepo.findById(1).get();
@@ -70,7 +84,7 @@ public class JimanTest {
 	//@Test//팔로우 테이블 추가
 	void test6() {
 		UserVO user1 = urepo.findById(1).get();
-		UserVO user2 = urepo.findById(4).get();
+		UserVO user2 = urepo.findById(2).get();
 		
 		FollowId fid = FollowId.builder()
 				.followStart(user1)
@@ -120,7 +134,7 @@ public class JimanTest {
 		
 		ProfileVO p2 = prepo.save(p);
 		
-		UserVO user = urepo.findById(1).get();
+		UserVO user = urepo.findById(2).get();
 		p2.setProfileLevel(UserLevelRole.GOLD1);
 		p2.setUser(user);
 		prepo.save(p2);
