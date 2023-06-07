@@ -1,20 +1,24 @@
 package com.samsam;
 
+import java.util.List;
 import java.util.stream.IntStream;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import com.samsam.repository.AlarmRepository;
 import com.samsam.repository.DailyStampRepository;
 import com.samsam.repository.FollowRepository;
 import com.samsam.repository.ProfileRepository;
 import com.samsam.repository.UserRepository;
 import com.samsam.repository.WorkRepository;
+import com.samsam.vo.AlarmVO;
 import com.samsam.vo.DailyStampVO;
 import com.samsam.vo.FollowId;
 import com.samsam.vo.FollowVO;
 import com.samsam.vo.ProfileVO;
+import com.samsam.vo.UserLevelRole;
 import com.samsam.vo.UserVO;
 import com.samsam.vo.WorkVO;
 
@@ -30,11 +34,43 @@ public class JimanTest {
 	DailyStampRepository drepo;
 	@Autowired
 	FollowRepository frepo;
+	@Autowired
+	AlarmRepository arepo;
 	
-	@Test//팔로우 테이블 추가
+	//@Test//내 프로필 조회
+	 void test9() {
+		UserVO user1 = urepo.findById(1).get();
+		ProfileVO pro =  prepo.findByUser(user1);
+		System.out.println(pro.getUser());
+	}
+	
+	//@Test//오운완 조회 
+	void test8() {
+		UserVO user1 = urepo.findById(1).get();
+		wrepo.findByUser(user1).forEach(work ->{ 
+			System.out.println(work);
+		});
+		
+		
+	}
+	
+	
+	//@Test//알람 테이블 추가
+	void test7() {
+		AlarmVO a = AlarmVO.builder()
+				.alarmCategory("입금")
+				.alarmMsg("10000원 입금")
+				.build();
+		AlarmVO alarm = arepo.save(a);
+		UserVO user1 = urepo.findById(1).get();
+		alarm.setUser(user1);
+		arepo.save(alarm);
+	}
+	
+	//@Test//팔로우 테이블 추가
 	void test6() {
 		UserVO user1 = urepo.findById(1).get();
-		UserVO user2 = urepo.findById(2).get();
+		UserVO user2 = urepo.findById(4).get();
 		
 		FollowId fid = FollowId.builder()
 				.followStart(user1)
@@ -68,8 +104,7 @@ public class JimanTest {
 			WorkVO w = WorkVO.builder().build();
 			WorkVO w2 = wrepo.save(w);
 			
-			UserVO user = urepo.findById(1).get();
-			
+			UserVO user = urepo.findById(2).get();
 			w2.setUser(user);
 			wrepo.save(w2);
 		});
@@ -79,15 +114,14 @@ public class JimanTest {
 	//@Test//프로필 생성
 	void test3() {
 		ProfileVO p = ProfileVO.builder()
-				.profileLevel("골드3")
 				.profileAbout("안녕하세요3")
+				.profileImg("기본사진.jpg")
 				.build();
 		
 		ProfileVO p2 = prepo.save(p);
 		
-		UserVO user = urepo.findById(1).orElse(null);
-		System.out.println(user);
-		
+		UserVO user = urepo.findById(1).get();
+		p2.setProfileLevel(UserLevelRole.GOLD1);
 		p2.setUser(user);
 		prepo.save(p2);
 	}

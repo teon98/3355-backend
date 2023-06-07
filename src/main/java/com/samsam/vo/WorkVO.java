@@ -34,7 +34,7 @@ public class WorkVO {//오운완 브이오
 	@CreationTimestamp
 	private Timestamp workDate;
 	
-	//연관관계 설정n:1
+	//연관관계 설정n:1 
 	//FK: 칼람이 board_bnofh 로 생성된다
 	@ManyToOne
 	@JoinColumn(name = "user_no")

@@ -26,6 +26,6 @@ public class FollowId implements Serializable{//복합키 생성
 	
 	@ManyToOne 
 	@JoinColumn(name ="follow_end",nullable = false )
-	private UserVO followEnd;
+	private UserVO followEnd; 
 	
 }
