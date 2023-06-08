@@ -37,7 +37,20 @@ public class JimanTest {
 	@Autowired
 	AlarmRepository arepo;
 	
-	@Test//이메일로 유저 조회
+	@Test
+	void test11() {
+		int userNo=0;
+		String userEmail = "ww";
+		String userPass = "ww";
+		if (urepo.findByUserEmailAndUserPass(userEmail,userPass) == null) {
+			userNo = 0;
+		} else {
+			userNo = urepo.findByUserEmailAndUserPass(userEmail,userPass).getUserNo();
+		}
+		System.out.println(userNo);
+	}
+	
+	//@Test//이메일로 유저 조회
 	void test10() {
 		String message = "";
 		UserVO user =urepo.findByUserEmail("지만@지만");
