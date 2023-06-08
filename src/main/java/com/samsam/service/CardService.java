@@ -24,6 +24,7 @@ public class CardService {
 			storeName = store.getStoreName();
 		
 		return storeName;
+		
 	}
 	
 }
