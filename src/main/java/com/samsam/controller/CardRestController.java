@@ -19,4 +19,5 @@ public class CardRestController {
 	public String barcodeScan(@RequestParam String storeNo) {
 		return cardService.barcodeScan(storeNo);
 	}
+	
 }

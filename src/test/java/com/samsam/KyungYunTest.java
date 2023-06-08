@@ -270,5 +270,4 @@ public class KyungYunTest {
 				.build();
 		userRepo.save(u1);
 	}
-	
 }
