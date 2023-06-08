@@ -11,4 +11,6 @@ import com.samsam.vo.UserVO;
 public interface UserRepository extends CrudRepository<UserVO, Integer>{
 	public UserVO findByUserEmail(String userEmail);
 	public UserVO findByUserNickname(String userNickname);
+	public UserVO findByUserEmailAndUserPass(String userEmail,String userPass);
+	
 }
