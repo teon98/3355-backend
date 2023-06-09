@@ -3,9 +3,12 @@ package com.samsam.controller;
 import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -28,7 +31,8 @@ public class UserRestConttoller {
 	ProfileRepository proRepo;
 	@Autowired
 	CardRepository cardRepo;
-	
+	@Autowired
+	JavaMailSender javaMailSender;
 	
 	@GetMapping(value = "/emailDup.sam/{userEmail}")//이메일 중복체크
 	public String EmailDup(@PathVariable String userEmail) {
@@ -90,7 +94,7 @@ public class UserRestConttoller {
 		return "성공^^";
 	}
 	
-	@GetMapping(value="/login.sam")
+	@GetMapping(value="/login.sam")//로그인
 	public int UserLogin(@RequestParam String userEmail,@RequestParam String userPass) {
 		int userNo=0;
 		if (userRepo.findByUserEmailAndUserPass(userEmail,userPass) != null) {
@@ -98,7 +102,34 @@ public class UserRestConttoller {
 		} else {
 			userNo = 0;
 		}
-		
+		return userNo;
+	}
+	
+	@PutMapping(value="/findPass.sam")//비밀번호 찾기
+	public Integer FindPass(@RequestParam String userEmail,@RequestParam String userNickname) {
+		Integer userNo=0;
+		if (userRepo.findByUserEmailAndUserNickname(userEmail, userNickname) != null) {
+			UserVO user = userRepo.findByUserEmailAndUserNickname(userEmail,userNickname);
+			Random random = new Random();
+			String userPass = (random.nextInt(9000) + 1000)+"";
+			user.setUserPass(userPass);
+			
+			userRepo.save(user);
+			
+			SimpleMailMessage message2 = new SimpleMailMessage();
+			message2.setFrom("shinhan3355@gmail.com");
+			message2.setTo(userEmail);
+			message2.setSubject("임시 비밀번호");
+			message2.setText(userPass); 
+			
+			javaMailSender.send(message2);
+			
+			System.out.println("성공");
+			
+			userNo = user.getUserNo();
+		} else {
+			userNo=0;
+		}
 		
 		return userNo;
 	}
