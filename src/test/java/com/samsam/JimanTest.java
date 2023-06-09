@@ -6,6 +6,9 @@ import java.util.stream.IntStream;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.mail.MailSender;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 
 import com.samsam.repository.AlarmRepository;
 import com.samsam.repository.DailyStampRepository;
@@ -36,8 +39,31 @@ public class JimanTest {
 	FollowRepository frepo;
 	@Autowired
 	AlarmRepository arepo;
+	@Autowired
+	JavaMailSender javaMailSender;
 	
 	@Test
+	void test12() {
+		emailSend("shinhan3355@gmail.com", "재밌는 제목", "재밌는 내용");
+		
+		
+	}
+	
+	
+	void emailSend(String toEmail,String subject,String body) {
+		SimpleMailMessage message = new SimpleMailMessage();
+		message.setFrom("shinhan3355@gmail.com");
+		message.setTo(toEmail);
+		message.setSubject(subject);
+		message.setText(body);
+		
+		javaMailSender.send(message);
+		
+		System.out.println("성공");
+		
+	}
+	
+	//@Test//로그인테스트
 	void test11() {
 		int userNo=0;
 		String userEmail = "ww";
