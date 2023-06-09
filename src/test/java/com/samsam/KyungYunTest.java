@@ -74,7 +74,7 @@ public class KyungYunTest {
 	}
 	
 	// 회원 탈퇴(Delete)
-	@Test
+//	@Test
 	void deleteUser() {
 		userRepo.deleteById(4);
 	}
@@ -179,9 +179,9 @@ public class KyungYunTest {
 	// 포인트 지급: 포인트 잔액에 추가되고 포인트 테이블 내역에 추가
 //	@Test
 	void insertPoint() {
-		int income = 80;
+		int income = 3000;
 
-		UserVO user = userRepo.findById(4).get();
+		UserVO user = userRepo.findById(110).get();
 		CardVO card = cardRepo.findByUser(user);
 		
 		int current = card.getPointBalance();
@@ -191,7 +191,7 @@ public class KyungYunTest {
 		PointVO point = PointVO.builder()
 				.pointSave(income)
 				.pointHistory(savedCard.getPointBalance())
-				.pointMemo("23/06/07 출석체크")
+				.pointMemo("23/06/09 출석체크")
 				.card(savedCard)
 				.build();
 		pointRepo.save(point);
@@ -200,9 +200,9 @@ public class KyungYunTest {
 	// 충전: 입금 발생시, 계좌 잔액에 추가되고 입금 테이블 내역에 추가
 //	@Test
 	void insertMoney() {
-		int income = 10000;
+		int income = 80000;
 
-		UserVO user = userRepo.findById(4).get();
+		UserVO user = userRepo.findById(110).get();
 		CardVO card = cardRepo.findByUser(user);
 		
 		int current = card.getAccountBalance();
@@ -226,7 +226,7 @@ public class KyungYunTest {
 				.build();
 		ProfileVO savedProfile = profRepo.save(profile);
 		
-		UserVO user = userRepo.findById(4).get();
+		UserVO user = userRepo.findById(110).get();
 		savedProfile.setProfileLevel(UserLevelRole.BRONZE4);
 		savedProfile.setUser(user);
 		profRepo.save(savedProfile);
@@ -236,7 +236,7 @@ public class KyungYunTest {
 //	@Test
 	void insertCard() {
 		// 카드 번호 없음.. 시퀀스가 생성되고 나서 따로 카드 번호를 만들어줘야함.
-		UserVO user = userRepo.findById(4).get();
+		UserVO user = userRepo.findById(110).get();
 		int password = 1234;
 		
 		CardVO card = CardVO.builder()
@@ -261,14 +261,14 @@ public class KyungYunTest {
 	// 유저 입력
 //	@Test
 	void insertUser() {
-		UserVO u1 = UserVO.builder()
-				.userNickname("경윤")
+		UserVO user = UserVO.builder()
+				.userNickname("김경윤")
 				.userEmail("kky@mail.com")
 				.userPass("1234")
 				.userBirth(970417)
 				.userGender(1)
 				.build();
-		userRepo.save(u1);
+		userRepo.save(user);
 	}
 	
 }
