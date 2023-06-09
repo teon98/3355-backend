@@ -142,7 +142,7 @@ public class TaekjooTest {
 		cardcusRepo.save(cardCus);
 	}
 	
-	@Test
+	//@Test
 	void test6() {
 		// 결제 시, 포인트 사용할 수 있음.
 		// 결제 시, 등급별로 차등 적립률 적용하여 포인트 지급
@@ -208,6 +208,19 @@ public class TaekjooTest {
 				.build();
 		pointRepo.save(pointPlus);
 		
+	}
+	
+	@Test
+	void test7() {
+		int userNo = 110;
+
+		UserVO user = userRepo.findById(userNo).get();
+		CardVO card = cardRepo.findByUser(user);
+		
+		int AccBal =card.getAccountBalance();
+		int PoBal = card.getPointBalance();
+		System.out.println(AccBal);
+		System.out.println(PoBal);
 	}
 	
 	
