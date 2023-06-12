@@ -134,4 +134,20 @@ public class UserRestConttoller {
 		return userNo;
 	}
 
+	//비밀번호 변경
+	@PutMapping(value = "/PassChange.sam")
+	public String PassChange(@RequestParam String tempPass,@RequestParam String userPass) {
+		String message = "";
+		
+		if(userRepo.findByUserPass(tempPass)==null) {
+			message="실패";
+		}else {
+			UserVO user = userRepo.findByUserPass(tempPass);
+			user.setUserPass(userPass);
+			userRepo.save(user);
+			message="성공";
+		}
+		
+		return message;
+	}
 }
