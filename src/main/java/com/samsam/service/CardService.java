@@ -76,6 +76,7 @@ public class CardService {
 			transaction.setAmountHistory(deposit.getDepositHistory());
 			transaction.setDate(deposit.getDepositDate());
 			transaction.setType("입금");
+			transaction.setStoreName("충전");
 			transactionList.add(transaction);
 		}
 
@@ -89,7 +90,7 @@ public class CardService {
 		List<String> historyList = new ArrayList<>();
 
 		// 카드번호 추가
-		historyList.add("카드 번호: " + cardCode);
+		historyList.add("카드 번호:" + cardCode);
 
 		// 정렬된 내역 출력
 		for (TransactionVO transaction : transactionList) {
@@ -101,23 +102,24 @@ public class CardService {
 
 			if (amountHistory != null) {
 				if (type.equals("출금")) {
-					historyList.add("출금 누적: " + amountHistory);
+					historyList.add("출금 누적:" + amountHistory);
 				} else if (type.equals("입금")) {
-					historyList.add("입금 누적: " + amountHistory);
+					historyList.add("입금 누적:" + amountHistory);
 				}
 			}
 			if (amount != null) {
 				if (type.equals("출금")) {
-					historyList.add("출금 금액: " + amount);
+					historyList.add("출금 금액:" + amount);
 				} else if (type.equals("입금")) {
-					historyList.add("입금 금액: " + amount);
+					historyList.add("입금 금액:" + amount);
 				}
 			}
 			if (date != null) {
-				historyList.add("날짜: " + date);
+				historyList.add("날짜:" + date);
 			}
+			
 			if (storeName != null) {
-				historyList.add("매장명: " + storeName);
+				historyList.add("매장명:" + storeName);
 			}
 		}
 
