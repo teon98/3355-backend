@@ -1,5 +1,11 @@
 package com.samsam;
 
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.IntStream;
 
@@ -42,7 +48,287 @@ public class JimanTest {
 	@Autowired
 	JavaMailSender javaMailSender;
 	
-	@Test
+	int wcount=0;
+	
+	
+	@Test//오늘날짜 찍어보기
+	void test13() {
+		int levelup=0;
+		Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+	     System.out.println("오늘의 날짜: " + timestamp);
+	     
+	     //오늘 날짜 뽑기
+	     SimpleDateFormat dayFormat = new SimpleDateFormat("dd");
+	     String day =  dayFormat.format(timestamp);
+	    		 //
+	     
+	
+		
+	     
+	     //오늘 날짜가 1일이면
+	     if(day.equals("01")) {
+//	    	//지난 달 구하기
+//		     SimpleDateFormat monthFormat = new SimpleDateFormat("MM");
+//		     int month = Integer.parseInt(monthFormat.format(timestamp))-1;
+	    	 
+	    	 //지난 달 구하기
+		   	  Calendar calendar = Calendar.getInstance();
+	          calendar.add(Calendar.MONTH, -1); // 현재 날짜에서 1달 전으로 설정
+
+	          SimpleDateFormat monthFormat = new SimpleDateFormat("yy/MM");
+	          String lastMonth = monthFormat.format(calendar.getTime());
+	          
+		 
+		     //지난 달에 운동한 날짜
+		     wrepo.findByWorkDateContaining(lastMonth).forEach(w->{
+		    	 wcount++;
+		     });
+		     
+		     if(wcount > 20 ){
+		    	 	levelup = 1;
+		     }else if(wcount <10){
+		    	  levelup = -1;
+		     }
+		     System.out.println(levelup);
+		     //유저 등급 가져오기 
+		     UserVO user =  urepo.findById(1).get();
+		     ProfileVO pro = prepo.findByUser(user);
+		     String l = pro.getProfileLevel()+"";
+			
+		   
+			//유저 등급 설정
+		     String level =l.substring(0,1);
+			String lastLevel = l.substring(l.length()-1);
+			System.out.println(level);
+			System.out.println(lastLevel);
+			
+			switch (level) {
+			case "B":
+					switch (lastLevel) {
+						case "1":
+								if(levelup == 1) {
+									ProfileVO prof = prepo.findByUser(user);
+									prof.setProfileLevel(UserLevelRole.BRONZE2);
+									prepo.save(prof);
+								}
+							break;
+						case "2":
+							if(levelup == 1) {
+								ProfileVO prof = prepo.findByUser(user);
+								prof.setProfileLevel(UserLevelRole.BRONZE3);
+								prepo.save(prof);
+							}else if(levelup == -1) {
+								ProfileVO prof = prepo.findByUser(user);
+								prof.setProfileLevel(UserLevelRole.BRONZE1);
+								prepo.save(prof);
+							}
+							break;
+						case "3":
+							if(levelup == 1) {
+								ProfileVO prof = prepo.findByUser(user);
+								prof.setProfileLevel(UserLevelRole.BRONZE4);
+								prepo.save(prof);
+							}else if(levelup == -1) {
+								ProfileVO prof = prepo.findByUser(user);
+								prof.setProfileLevel(UserLevelRole.BRONZE2);
+								prepo.save(prof);
+							}
+							break;
+						case "4":
+							if(levelup == 1) {
+								ProfileVO prof = prepo.findByUser(user);
+								prof.setProfileLevel(UserLevelRole.SILVER1);
+								prepo.save(prof);
+							}else if(levelup == -1) {
+								ProfileVO prof = prepo.findByUser(user);
+								prof.setProfileLevel(UserLevelRole.BRONZE3);
+								prepo.save(prof);
+							}
+							break;
+	
+						default:
+							break;
+					}
+				break;
+			case "S":
+				switch (lastLevel) {
+				case "1":
+						if(levelup == 1) {
+							ProfileVO prof = prepo.findByUser(user);
+							prof.setProfileLevel(UserLevelRole.SILVER2);
+							prepo.save(prof);
+						}else if(levelup == -1) {
+							ProfileVO prof = prepo.findByUser(user);
+							prof.setProfileLevel(UserLevelRole.BRONZE4);
+							prepo.save(prof);
+						}
+					break;
+				case "2":
+					if(levelup == 1) {
+						ProfileVO prof = prepo.findByUser(user);
+						prof.setProfileLevel(UserLevelRole.SILVER3);
+						prepo.save(prof);
+					}else if(levelup == -1) {
+						ProfileVO prof = prepo.findByUser(user);
+						prof.setProfileLevel(UserLevelRole.SILVER1);
+						prepo.save(prof);
+					}
+					break;
+				case "3":
+					if(levelup == 1) {
+						ProfileVO prof = prepo.findByUser(user);
+						prof.setProfileLevel(UserLevelRole.SILVER4);
+						prepo.save(prof);
+					}else if(levelup == -1) {
+						ProfileVO prof = prepo.findByUser(user);
+						prof.setProfileLevel(UserLevelRole.SILVER2);
+						prepo.save(prof);
+					}
+					break;
+				case "4":
+					if(levelup == 1) {
+						ProfileVO prof = prepo.findByUser(user);
+						prof.setProfileLevel(UserLevelRole.GOLD1);
+						prepo.save(prof);
+					}else if(levelup == -1) {
+						ProfileVO prof = prepo.findByUser(user);
+						prof.setProfileLevel(UserLevelRole.SILVER3);
+						prepo.save(prof);
+					}
+					break;
+
+				default:
+					break;
+			}
+				break;
+			case "G":
+				switch (lastLevel) {
+				case "1":
+						if(levelup == 1) {
+							ProfileVO prof = prepo.findByUser(user);
+							prof.setProfileLevel(UserLevelRole.GOLD2);
+							prepo.save(prof);
+						}else if(levelup == -1) {
+							ProfileVO prof = prepo.findByUser(user);
+							prof.setProfileLevel(UserLevelRole.SILVER4);
+							prepo.save(prof);
+						}
+					break;
+				case "2":
+					if(levelup == 1) {
+						ProfileVO prof = prepo.findByUser(user);
+						prof.setProfileLevel(UserLevelRole.GOLD3);
+						prepo.save(prof);
+					}else if(levelup == -1) {
+						ProfileVO prof = prepo.findByUser(user);
+						prof.setProfileLevel(UserLevelRole.GOLD1);
+						prepo.save(prof);
+					}
+					break;
+				case "3":
+					if(levelup == 1) {
+						ProfileVO prof = prepo.findByUser(user);
+						prof.setProfileLevel(UserLevelRole.GOLD4);
+						prepo.save(prof);
+					}else if(levelup == -1) {
+						ProfileVO prof = prepo.findByUser(user);
+						prof.setProfileLevel(UserLevelRole.GOLD2);
+						prepo.save(prof);
+					}
+					break;
+				case "4":
+					if(levelup == 1) {
+						ProfileVO prof = prepo.findByUser(user);
+						prof.setProfileLevel(UserLevelRole.PLATINUM1);
+						prepo.save(prof);
+					}else if(levelup == -1) {
+						ProfileVO prof = prepo.findByUser(user);
+						prof.setProfileLevel(UserLevelRole.GOLD3);
+						prepo.save(prof);
+					}
+					break;
+
+				default:
+					break;
+				}
+
+				break;
+			case "P":
+				switch (lastLevel) {
+				case "1":
+						if(levelup == 1) {
+							ProfileVO prof = prepo.findByUser(user);
+							prof.setProfileLevel(UserLevelRole.PLATINUM2);
+							prepo.save(prof);
+						}else if(levelup == -1) {
+							ProfileVO prof = prepo.findByUser(user);
+							prof.setProfileLevel(UserLevelRole.GOLD4);
+							prepo.save(prof);
+						}
+					break;
+				case "2":
+					if(levelup == 1) {
+						ProfileVO prof = prepo.findByUser(user);
+						prof.setProfileLevel(UserLevelRole.PLATINUM3);
+						prepo.save(prof);
+					}else if(levelup == -1) {
+						ProfileVO prof = prepo.findByUser(user);
+						prof.setProfileLevel(UserLevelRole.PLATINUM1);
+						prepo.save(prof);
+					}
+					break;
+				case "3":
+					if(levelup == 1) {
+						ProfileVO prof = prepo.findByUser(user);
+						prof.setProfileLevel(UserLevelRole.PLATINUM4);
+						prepo.save(prof);
+					}else if(levelup == -1) {
+						ProfileVO prof = prepo.findByUser(user);
+						prof.setProfileLevel(UserLevelRole.PLATINUM2);
+						prepo.save(prof);
+					}
+					break;
+				case "4":
+						if(levelup == -1) {
+						ProfileVO prof = prepo.findByUser(user);
+						prof.setProfileLevel(UserLevelRole.PLATINUM3);
+						prepo.save(prof);
+					}
+					break;
+
+				default:
+					break;
+				}
+				break;
+
+			default:
+				break;
+			}
+		
+	    	 
+	     }else {
+	    	 //이번 달에 운동한 날짜
+	    	 SimpleDateFormat dateFormat = new SimpleDateFormat("yy/MM");
+
+		      String date = dateFormat.format(timestamp);
+		      System.out.println(date);
+		     wrepo.findByWorkDateContaining(date).forEach(w->{
+		    	 wcount++;
+		     });
+		     System.out.println("6월동안 운동한 날짜: "+wcount);
+	     }
+	     
+	     
+	     //유저 등급 가져오기 
+	     UserVO user =  urepo.findById(1).get();
+	     ProfileVO pro = prepo.findByUser(user);
+	     String l = pro.getProfileLevel()+"";
+	     System.out.println(l);
+	}
+	
+	
+	
+	//@Test//이메일 보내기
 	void test12() {
 		emailSend("shinhan3355@gmail.com", "재밌는 제목", "재밌는 내용");
 		
@@ -157,7 +443,7 @@ public class JimanTest {
 			WorkVO w = WorkVO.builder().build();
 			WorkVO w2 = wrepo.save(w);
 			
-			UserVO user = urepo.findById(2).get();
+			UserVO user = urepo.findById(1).get();
 			w2.setUser(user);
 			wrepo.save(w2);
 		});
@@ -173,7 +459,7 @@ public class JimanTest {
 		
 		ProfileVO p2 = prepo.save(p);
 		
-		UserVO user = urepo.findById(2).get();
+		UserVO user = urepo.findById(1).get();
 		p2.setProfileLevel(UserLevelRole.GOLD1);
 		p2.setUser(user);
 		prepo.save(p2);
@@ -182,8 +468,8 @@ public class JimanTest {
 	//@Test//유저 입력
 	void test2() {
 		UserVO u1 = UserVO.builder()
-				.userNickname("지만2")
-				.userEmail("지만@지만2")
+				.userNickname("지만1")
+				.userEmail("지만@지만1")
 				.userPass("1234")
 				.userBirth(980420)
 				.userGender(1)

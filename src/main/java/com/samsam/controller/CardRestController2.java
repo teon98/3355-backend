@@ -1,9 +1,11 @@
 package com.samsam.controller;
 
 import java.util.HashMap;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,7 +14,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.samsam.service.AccPoBalService;
 import com.samsam.vo.CardVO;
-import com.samsam.vo.WithdrawVO;
 
 @RestController
 @RequestMapping("/home")
@@ -34,9 +35,9 @@ public class CardRestController2 {
 	}
 	
 	// 카드 입출금 내역
-	@GetMapping("/")
-	public WithdrawVO CardHistory() {
-		return null;
+	@GetMapping("/history/{userNo}")
+	public List<String> getWithdrawDepositHistory(@PathVariable String userNo) {
+		return AccService.getWithdrawDepositHistory(userNo);
 	}
 
 }

@@ -20,6 +20,12 @@ public class CardRestController {
 	@Autowired
 	CardService cardService;
 	
+	@GetMapping("/pay/complete")
+	public HashMap<String, String> selectWithdraws(@RequestParam String userNo) {
+		return cardService.selectWithdraws(userNo);
+	}
+	
+	
 	@GetMapping("/pay")
 	public CardVO readBalance(@RequestParam String userNo) {
 		return cardService.readBalance(userNo);

@@ -1,10 +1,12 @@
 package com.samsam;
 
+import java.util.List;
 import java.util.Random;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.samsam.repository.CardRepository;
 import com.samsam.repository.CardcustomRepository;
@@ -54,46 +56,74 @@ public class KyungYunTest {
 	WithdrawRepository wdRepo;
 	@Autowired
 	CardcustomRepository cardcusRepo;
+
 	
+	// 결제 정보 불러오기 (결제 완료 후, 영수증처럼 보려고)
+//	@Test
+	@Transactional
+	void selectWithdraws() {
+		UserVO user = userRepo.findById(110).get();
+		CardVO card = cardRepo.findByUser(user);
+		List<WithdrawVO> list = wdRepo.findByCardOrderByWithdrawDateDesc(card);
+
+		WithdrawVO wd = list.get(0);
+
+		System.out.println("결제 가맹점 명: " + wd.getStore().getStoreName());
+		System.out.println("결제 일시: " + wd.getWithdrawDate());
+		System.out.println("주문 금액: " + (wd.getWithdrawCash() + wd.getWithdrawPoint()));
+		System.out.println("실 결제 금액: " + wd.getWithdrawCash());
+		System.out.println("포인트 사용: " + wd.getWithdrawPoint());
+
+		String level = user.getProfile().getProfileLevel().toString();
+		double ratio = 0.0;
+		switch (level.charAt(0)) {
+		case 'B':
+			ratio = 0.05;
+			break;
+		case 'S':
+			ratio = 0.1;
+			break;
+		case 'G':
+			ratio = 0.15;
+			break;
+		case 'P':
+			ratio = 0.2;
+			break;
+		}
+
+		System.out.println("포인트 적립: " + (int) (wd.getWithdrawCash() * ratio));
+	}
+
 	// 팔로우 테이블 추가
 //	@Test
 	void follow() {
 		UserVO user1 = userRepo.findById(2).get();
 		UserVO user2 = userRepo.findById(3).get();
-		
-		FollowId fid = FollowId.builder()
-				.followStart(user1)
-				.followEnd(user2)
-				.build();
-		
-		FollowVO follow = FollowVO.builder()
-				.follow(fid)
-				.build();
-		
+
+		FollowId fid = FollowId.builder().followStart(user1).followEnd(user2).build();
+
+		FollowVO follow = FollowVO.builder().follow(fid).build();
+
 		followRepo.save(follow);
 	}
-	
+
 	// 회원 탈퇴(Delete)
-//	@Test
+	@Test
 	void deleteUser() {
-		userRepo.deleteById(4);
+		userRepo.deleteById(107);
 	}
-	
+
 	// 카드 커스텀 insert
 //	@Test
 	void cardCustomInsert() {
 		UserVO user = userRepo.findById(4).get();
 		CardVO card = cardRepo.findByUser(user);
-		
-		CardcustomVO cardCus = CardcustomVO.builder()
-				.card(card)
-				.customColor("orange")
-				.customLettering("우하하")
-				.build();
-		
+
+		CardcustomVO cardCus = CardcustomVO.builder().card(card).customColor("orange").customLettering("우하하").build();
+
 		cardcusRepo.save(cardCus);
 	}
-	
+
 	// 결제
 //	@Test
 	void pay() {
@@ -101,7 +131,7 @@ public class KyungYunTest {
 		// 결제 시, 등급별로 차등 적립률 적용하여 포인트 적립
 		UserVO user = userRepo.findById(4).get();
 		ProfileVO profile = profRepo.findByUser(user);
-		
+
 		String level = profile.getProfileLevel().toString();
 		double ratio = 0.0;
 		switch (level.charAt(0)) {
@@ -118,64 +148,49 @@ public class KyungYunTest {
 			ratio = 0.2;
 			break;
 		}
-		
+
 		CardVO card = cardRepo.findByUser(user);
 		StoreVO store = storeRepo.findById(88883001).get();
-		
+
 		int amount = 5000;
 		int pointspend = 50;
 		int spend = amount - pointspend;
-		
+
 		int current = card.getAccountBalance();
 		int currentPoint = card.getPointBalance();
 		card.setAccountBalance(current - spend);
 		card.setPointBalance(currentPoint - pointspend);
 		CardVO savedCard = cardRepo.save(card);
-		
-		if(pointspend != 0) {
-			PointVO pointMinus = PointVO.builder()
-					.pointSave(pointspend * -1)
-					.pointMemo(store.getStoreName() + " 결제")
-					.pointHistory(savedCard.getPointBalance())
-					.card(savedCard)
-					.build();
+
+		if (pointspend != 0) {
+			PointVO pointMinus = PointVO.builder().pointSave(pointspend * -1).pointMemo(store.getStoreName() + " 결제")
+					.pointHistory(savedCard.getPointBalance()).card(savedCard).build();
 			pointRepo.save(pointMinus);
 		}
-		
-		WithdrawVO withdraw = WithdrawVO.builder()
-				.withdrawCash(spend)
-				.withdrawPoint(pointspend)
-				.withdrawHistory(savedCard.getAccountBalance())
-				.card(savedCard)
-				.store(store)
-				.build();
+
+		WithdrawVO withdraw = WithdrawVO.builder().withdrawCash(spend).withdrawPoint(pointspend)
+				.withdrawHistory(savedCard.getAccountBalance()).card(savedCard).store(store).build();
 		wdRepo.save(withdraw);
-		
-		if(spend != 0) {
+
+		if (spend != 0) {
 			card = cardRepo.findByUser(user);
-			card.setPointBalance(card.getPointBalance() + (int)(spend * ratio));
+			card.setPointBalance(card.getPointBalance() + (int) (spend * ratio));
 			CardVO savedCard2 = cardRepo.save(card);
-			
-			PointVO pointPlus = PointVO.builder()
-					.pointSave((int)(spend * ratio))
-					.pointMemo(store.getStoreName() + " 적립")
-					.pointHistory(savedCard2.getPointBalance())
-					.card(savedCard2)
+
+			PointVO pointPlus = PointVO.builder().pointSave((int) (spend * ratio))
+					.pointMemo(store.getStoreName() + " 적립").pointHistory(savedCard2.getPointBalance()).card(savedCard2)
 					.build();
 			pointRepo.save(pointPlus);
 		}
 	}
-	
+
 	// 가게 정보 입력해두기
 //	@Test
 	void insertStore() {
-		StoreVO store = StoreVO.builder()
-				.storeNo(88883001)
-				.storeName("택주네 헬스장")
-				.build();
+		StoreVO store = StoreVO.builder().storeNo(88883001).storeName("택주네 헬스장").build();
 		storeRepo.save(store);
 	}
-	
+
 	// 포인트 지급: 포인트 잔액에 추가되고 포인트 테이블 내역에 추가
 //	@Test
 	void insertPoint() {
@@ -183,17 +198,13 @@ public class KyungYunTest {
 
 		UserVO user = userRepo.findById(110).get();
 		CardVO card = cardRepo.findByUser(user);
-		
+
 		int current = card.getPointBalance();
 		card.setPointBalance(current + income);
 		CardVO savedCard = cardRepo.save(card);
 
-		PointVO point = PointVO.builder()
-				.pointSave(income)
-				.pointHistory(savedCard.getPointBalance())
-				.pointMemo("23/06/09 출석체크")
-				.card(savedCard)
-				.build();
+		PointVO point = PointVO.builder().pointSave(income).pointHistory(savedCard.getPointBalance())
+				.pointMemo("23/06/12 출석체크").card(savedCard).build();
 		pointRepo.save(point);
 	}
 
@@ -204,48 +215,40 @@ public class KyungYunTest {
 
 		UserVO user = userRepo.findById(110).get();
 		CardVO card = cardRepo.findByUser(user);
-		
+
 		int current = card.getAccountBalance();
 		card.setAccountBalance(current + income);
 		CardVO savedCard = cardRepo.save(card);
 
-		DepositVO depo = DepositVO.builder()
-				.depositCash(income)
-				.depositHistory(savedCard.getAccountBalance())
-				.card(savedCard)
-				.build();
+		DepositVO depo = DepositVO.builder().depositCash(income).depositHistory(savedCard.getAccountBalance())
+				.card(savedCard).build();
 		depoRepo.save(depo);
 	}
 
 	// 프로필 생성
 //	@Test
 	void insertProfile() {
-		ProfileVO profile = ProfileVO.builder()
-				.profileAbout("나 갱윤쓰이올시다")
-				.profileImg("무야호.jpg")
-				.build();
+		ProfileVO profile = ProfileVO.builder().profileAbout("나 갱윤쓰이올시다").profileImg("무야호.jpg").build();
 		ProfileVO savedProfile = profRepo.save(profile);
-		
+
 		UserVO user = userRepo.findById(110).get();
 		savedProfile.setProfileLevel(UserLevelRole.BRONZE4);
 		savedProfile.setUser(user);
 		profRepo.save(savedProfile);
 	}
-	
+
 	// 카드 생성
 //	@Test
 	void insertCard() {
 		// 카드 번호 없음.. 시퀀스가 생성되고 나서 따로 카드 번호를 만들어줘야함.
 		UserVO user = userRepo.findById(110).get();
 		int password = 1234;
-		
-		CardVO card = CardVO.builder()
-				.cardPass(password)
-				.build();
+
+		CardVO card = CardVO.builder().cardPass(password).build();
 		CardVO savedCard = cardRepo.save(card);
 
 		savedCard.setUser(user);
-		
+
 		// 카드 시퀀스(1000~9999)로 카드 번호 생성
 		String rst = "3355";
 		rst += "-" + savedCard.getCardSeq();
@@ -261,14 +264,9 @@ public class KyungYunTest {
 	// 유저 입력
 //	@Test
 	void insertUser() {
-		UserVO user = UserVO.builder()
-				.userNickname("김경윤")
-				.userEmail("kky@mail.com")
-				.userPass("1234")
-				.userBirth(970417)
-				.userGender(1)
-				.build();
+		UserVO user = UserVO.builder().userNickname("김경윤").userEmail("kky@mail.com").userPass("1234").userBirth(970417)
+				.userGender(1).build();
 		userRepo.save(user);
 	}
-	
+
 }
