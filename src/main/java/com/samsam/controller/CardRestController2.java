@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.samsam.service.AccPoBalService;
 import com.samsam.vo.CardVO;
+import com.samsam.vo.WithdrawVO;
 
 @RestController
 @RequestMapping("/home")
@@ -30,6 +31,12 @@ public class CardRestController2 {
 	@PostMapping("/charge")
 	public String chargeBalance(@RequestBody HashMap<String, String> map) {
 	    return AccService.chargeBalance(map);
+	}
+	
+	// 카드 입출금 내역
+	@GetMapping("/")
+	public WithdrawVO CardHistory() {
+		return null;
 	}
 
 }

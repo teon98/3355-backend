@@ -210,7 +210,7 @@ public class TaekjooTest {
 		
 	}
 	
-	@Test
+	//@Test
 	void test7() {
 		int userNo = 110;
 
@@ -221,6 +221,13 @@ public class TaekjooTest {
 		int PoBal = card.getPointBalance();
 		System.out.println(AccBal);
 		System.out.println(PoBal);
+	}
+	
+	@Test
+	void test8(){
+		UserVO user = userRepo.findById(110).get();
+		CardVO card = cardRepo.findByUser(user);
+//		WithdrawVO with = wdRepo.fin
 	}
 	
 	
