@@ -66,13 +66,6 @@ public class CardService {
 			break;
 		}
 		
-//		System.out.println("결제 가맹점 명: " + wd.getStore().getStoreName());
-//		System.out.println("결제 일시: " + wd.getWithdrawDate());
-//		System.out.println("실 결제 금액: " + wd.getWithdrawCash());
-//		System.out.println("포인트 사용: " + wd.getWithdrawPoint());
-//		System.out.println("주문 금액: " + (wd.getWithdrawCash() + wd.getWithdrawPoint()));
-//		System.out.println("포인트 적립: " + (int) (wd.getWithdrawCash() * ratio));
-		
 		map.put("storeName", wd.getStore().getStoreName());
 		map.put("withdrawDate", wd.getWithdrawDate().toString());
 		map.put("withdrawCash", spendMoney + "");

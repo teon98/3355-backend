@@ -57,6 +57,7 @@ public class KyungYunTest {
 	@Autowired
 	CardcustomRepository cardcusRepo;
 
+	
 	// 결제 정보 불러오기 (결제 완료 후, 영수증처럼 보려고)
 //	@Test
 	@Transactional
