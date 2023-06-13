@@ -1,5 +1,8 @@
 package com.samsam;
 
+import java.sql.Timestamp;
+import java.util.List;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -129,7 +132,7 @@ public class TaekjooTest {
 		depoRepo.save(depo);
 	}
 	
-//	@Test
+	// @Test
 	void test5() {
 		// 카드 커스텀 insert
 		UserVO user = userRepo.findById(1).get();
@@ -210,7 +213,7 @@ public class TaekjooTest {
 		
 	}
 	
-	@Test
+	//@Test
 	void test7() {
 		int userNo = 110;
 
@@ -223,6 +226,33 @@ public class TaekjooTest {
 		System.out.println(PoBal);
 	}
 	
-	
+	// 입출금 내역 뽑아오기~
+	@Test
+	void test8(){
+	    UserVO user = userRepo.findById(110).get();
+	    CardVO card = cardRepo.findByUser(user);
+	    List<WithdrawVO> wdList = wdRepo.findByCardOrderByWithdrawDateDesc(card);
+	    List<DepositVO> dpList = depoRepo.findByCardOrderByDepositDateDesc(card);
+	    
+	    // 출금 내역, 출금 누적, 출금 날짜 가져오기
+	    for (WithdrawVO withdraw : wdList) {
+	        Integer wdCash = withdraw.getWithdrawCash();
+	        Integer wdHistory = withdraw.getWithdrawHistory();
+	        Timestamp wdDate = withdraw.getWithdrawDate();
+	        System.out.println("출금 내역: " + wdCash);
+	        System.out.println("출금 누적: " + wdHistory);
+	        System.out.println("출금 날짜: " + wdDate);
+	    }
+	    
+	    // 입금 내역, 입금 누적, 입금 날짜 가져오기
+	    for (DepositVO deposit : dpList) {
+	        Integer dpCash = deposit.getDepositCash();
+	        Integer dpHistory = deposit.getDepositHistory();
+	        Timestamp dpDate = deposit.getDepositDate();
+	        System.out.println("입금 내역: " + dpCash);
+	        System.out.println("입금 누적: " + dpHistory);
+	        System.out.println("입금 날짜: " + dpDate);
+	    }
+	}
 
 }
