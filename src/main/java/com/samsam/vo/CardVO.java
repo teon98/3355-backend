@@ -1,6 +1,4 @@
 package com.samsam.vo;
-//택주와 경윤
-
 import java.sql.Timestamp;
 
 import javax.persistence.CascadeType;
@@ -15,6 +13,8 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.CreationTimestamp;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -51,6 +51,7 @@ public class CardVO {
 	@CreationTimestamp
 	private Timestamp cardDate;
 	
+	@JsonIgnore
 	@OneToOne(cascade = CascadeType.ALL) 
 	@JoinColumn(name="user_no")
 	private UserVO user;
