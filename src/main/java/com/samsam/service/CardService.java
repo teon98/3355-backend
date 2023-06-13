@@ -1,9 +1,11 @@
 package com.samsam.service;
 
 import java.util.HashMap;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.samsam.repository.CardRepository;
 import com.samsam.repository.PointRepository;
@@ -19,6 +21,7 @@ import com.samsam.vo.UserVO;
 import com.samsam.vo.WithdrawVO;
 
 @Service
+@Transactional
 public class CardService {
 
 	@Autowired
@@ -33,6 +36,53 @@ public class CardService {
 	PointRepository pointRepo;
 	@Autowired
 	WithdrawRepository wdRepo;
+	
+	// 결제 정보 불러오기 (결제 완료 후, 영수증처럼 보려고)
+	public HashMap<String, String> selectWithdraws(String userNo) {
+		HashMap<String, String> map = new HashMap<>();
+		
+		int num = Integer.parseInt(userNo);
+		UserVO user = userRepo.findById(num).get();
+		CardVO card = cardRepo.findByUser(user);
+		List<WithdrawVO> list = wdRepo.findByCardOrderByWithdrawDateDesc(card);
+		WithdrawVO wd = list.get(0);
+		int spendMoney = wd.getWithdrawCash();
+		int spendPoint = wd.getWithdrawPoint();
+
+		String level = user.getProfile().getProfileLevel().toString();
+		double ratio = 0.0;
+		switch (level.charAt(0)) {
+		case 'B':
+			ratio = 0.05;
+			break;
+		case 'S':
+			ratio = 0.1;
+			break;
+		case 'G':
+			ratio = 0.15;
+			break;
+		case 'P':
+			ratio = 0.2;
+			break;
+		}
+		
+//		System.out.println("결제 가맹점 명: " + wd.getStore().getStoreName());
+//		System.out.println("결제 일시: " + wd.getWithdrawDate());
+//		System.out.println("실 결제 금액: " + wd.getWithdrawCash());
+//		System.out.println("포인트 사용: " + wd.getWithdrawPoint());
+//		System.out.println("주문 금액: " + (wd.getWithdrawCash() + wd.getWithdrawPoint()));
+//		System.out.println("포인트 적립: " + (int) (wd.getWithdrawCash() * ratio));
+		
+		map.put("storeName", wd.getStore().getStoreName());
+		map.put("withdrawDate", wd.getWithdrawDate().toString());
+		map.put("withdrawCash", spendMoney + "");
+		map.put("point", spendPoint + "");
+		map.put("amount", (spendMoney + spendPoint) + "");
+		map.put("pointSave", (int) (wd.getWithdrawCash() * ratio) + "");
+		map.put("levelRatio", ratio + "");
+
+		return map;
+	}
 
 	// 카드 잔액, 포인트 잔액 조회
 	public CardVO readBalance(String userNo) {
