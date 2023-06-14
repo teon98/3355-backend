@@ -38,22 +38,24 @@ public class UploadFileUtils {
 //			Thumbnails.of(image).size(THUMB_WIDTH, THUMB_HEIGHT).toFile(thumbnail);
 //		}
 		
+		System.out.println("fileUpload newFileName: " + newFileName);
 		return newFileName;
 	}
 	
 	//폴더이름 및 폴더 생성
 	public static String calcPath(String uploadPath) {
 		Calendar cal = Calendar.getInstance();
-		String monthPath = File.separator + new DecimalFormat("00").format(cal.get(Calendar.MONTH) + 1);
+		String monthPath =  File.separator + new DecimalFormat("00").format(cal.get(Calendar.MONTH) + 1);
 		String datePath = monthPath + File.separator + new DecimalFormat("00").format(cal.get(Calendar.DATE));
 		
 		int pos = uploadPath.lastIndexOf("\\");
+		System.out.println("pos: " + pos);
 		String folder = uploadPath.substring(0,pos);
+		System.out.println("folder: " + folder);
 		makeDir(folder, uploadPath.substring(pos));
-		
 		System.out.println(folder + ":" + uploadPath.substring(pos));
-		makeDir(uploadPath, monthPath, datePath);
-//		makeDir(uploadPath, monthPath, datePath + "\\s");
+		 
+		makeDir(uploadPath, monthPath, datePath );
 		return datePath;
 	}
 	
@@ -63,6 +65,9 @@ public class UploadFileUtils {
 			return;
 		for (String path : paths) {
 			File dirPath = new File(uploadPath + path);
+			
+			System.out.println(dirPath);
+			
 			if (!dirPath.exists())
 				dirPath.mkdir();
 		}

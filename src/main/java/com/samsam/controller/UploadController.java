@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -13,13 +14,12 @@ import com.samsam.UploadFileUtils;
 
 @RestController
 public class UploadController {
-	//application.properties에 설정된 경로 가져옴
-	@Value("${spring.servlet.multipart.location}")
-	String uploadPath;
 	
-	@PostMapping("/profile/uploadImg")
-	public String uploadImg(@RequestParam MultipartFile[] files) throws IOException, Exception{
-		String UPLOAD_PATH = uploadPath + File.separator + "profile";
+	@PostMapping("/uploadImg")
+	public String uploadImg(@RequestParam MultipartFile[] files, 
+			@RequestParam String defaultpath, @RequestParam String path) throws IOException, Exception{
+		String UPLOAD_PATH = defaultpath + File.separator + path;
+		System.out.println(defaultpath);
 		
 		//upload_path 폴더 존재여부 판단
 		File upload_path = new File(UPLOAD_PATH);
