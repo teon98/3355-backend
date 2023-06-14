@@ -37,15 +37,18 @@ public class UserVO implements Serializable {
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "USERS_SEQUENCE_GENERATOR")
 	private Integer userNo;
 
-	@Column(nullable = false, unique = true)
+	
+	
+	@Column(nullable = true, unique = true)
 	private String userNickname;
-	@Column(nullable = false, unique = true)
+	@Column(nullable = true, unique = true)
 	private String userEmail;
-	@Column(nullable = false)
-	private String userPass;
-	@Column(nullable = false)
+
+	@Column(nullable = true)
+	private String userPass; 
+	@Column(nullable = true)
 	private Integer userBirth;
-	@Column(nullable = false)
+	@Column(nullable = true)
 	private Integer userGender;
 
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
