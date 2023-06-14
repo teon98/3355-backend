@@ -1,6 +1,7 @@
 package com.samsam.repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
@@ -13,5 +14,6 @@ public interface UserRepository extends CrudRepository<UserVO, Integer>{
 	public UserVO findByUserNickname(String userNickname);
 	public UserVO findByUserEmailAndUserPass(String userEmail,String userPass);
 	public UserVO findByUserEmailAndUserNickname(String userEmail,String userNickname);
+	public UserVO findByUserBirthIsNull();
 	public UserVO findByUserPass(String userPass);
 }
