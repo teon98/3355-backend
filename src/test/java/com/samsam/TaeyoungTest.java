@@ -1,6 +1,8 @@
 package com.samsam;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.stream.IntStream;
 
@@ -40,26 +42,77 @@ public class TaeyoungTest {
 	PostTagRepository posttagRepo;
 	@Autowired
 	FollowRepository followRepo;
-	int i=0;
+
+	
 	@Test
+	void test8() {
+		List<Object> result = new ArrayList<>();
+		List<Integer> followings =  followRepo.findByFollowStart(1);
+		List<UserVO> followinglist = new ArrayList<UserVO>();
+		
+		followings.forEach((id) ->{
+			UserVO user = userRepo.findById(id).get();
+			followinglist.add(user);
+		});
+		
+		
+		
+		for(UserVO user : followinglist) {
+			System.out.println(user.getUserNo()+"번 불러옴");
+			
+			HashMap<String, String> users = new HashMap<>();
+			
+			if(user.getProfile() == null) {
+				users.put("profileImg", null);
+			}else {
+				users.put("profileImg", user.getProfile().getProfileImg());
+			}
+			users.put("nickname", user.getUserNickname());
+			
+			result.add(users);
+		}
+		
+		System.out.println(result);
+	}
+	
+	//@Test
 	void test7() {
 		//userRepo.deleteById(116);
 		//내가 Follow하는 사람들 목록 가져오기
  
-		List<Integer> myfollowers =  followRepo.findByFollowStart(1);
-		myfollowers.forEach((item)->{
-			System.out.println(item);});	
+		List<Integer> followings =  followRepo.findByFollowStart(1);
+		followings.forEach((item)->{
+			System.out.println(item);
+		});	
 		
 		
-		UserVO[] arr = new UserVO[myfollowers.size()];
-		
-		myfollowers.forEach((id)->{
-			System.out.println(id + "+" + i);
-			arr[i] = userRepo.findById(id).get();
-			
-			System.out.println(i + ":" + arr[i].getUserNickname());
-			i++;
+		List<UserVO> followinglist = new ArrayList<UserVO>();
+		followings.forEach((id) ->{
+			UserVO user = userRepo.findById(id).get();
+			followinglist.add(user);
 		});
+		
+		for(UserVO user : followinglist) {
+			System.out.println(user.getUserNo());
+			if(user.getProfile() == null) {
+				System.out.println(user.getProfile());
+			}else {
+				System.out.println(user.getProfile().getProfileImg());
+			}
+			System.out.println(user.getUserNickname());
+			System.out.println("-------------");
+		}
+		
+//		UserVO[] myfollowinglist = new UserVO[myfollowers.size()];
+//		System.out.println(myfollowinglist);
+		
+//		myfollowers.forEach((id)->{
+//			System.out.println(id + "+" + i);
+//			arr[i] = userRepo.findById(id).get();
+//			
+//			System.out.println(i + ":" + arr[i].getUserNickname());
+//			i++;
+//		});
 	}
 	
 	//@Test
