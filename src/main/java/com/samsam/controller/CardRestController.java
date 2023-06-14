@@ -33,6 +33,12 @@ public class CardRestController {
 	public List<Object> getWithdrawDepositHistory(@PathVariable String userNo) {
 		return cardService.getWithdrawDepositHistory(userNo);
 	}
+	
+	// 포인트 내역
+	@GetMapping("pthistory/{userNo}")
+	public List<Object> getPointHistory(@PathVariable String userNo){
+		return cardService.getPointHistory(userNo);
+	}
 
 	// 결제 정보 불러오기 (결제 완료 후, 영수증처럼 보려고)
 	@GetMapping("/pay/complete")
