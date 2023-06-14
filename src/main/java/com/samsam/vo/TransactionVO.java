@@ -1,16 +1,22 @@
 package com.samsam.vo;
 
-import java.sql.Timestamp;
-
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString
 @Getter
 @Setter
 public class TransactionVO {
+	private String type;
 	private Integer amount;
 	private Integer amountHistory;
-    private Timestamp date;
-    private String storeName;
-    private String type;
+	private String date;
+	private String storeName;
 }

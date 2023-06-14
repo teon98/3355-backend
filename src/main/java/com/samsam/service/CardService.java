@@ -1,6 +1,5 @@
 package com.samsam.service;
 
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -47,83 +46,49 @@ public class CardService {
 	DepositRepository dpRepo;
 
 	// 입출금 내역서
-	public List<String> getWithdrawDepositHistory(String userNo) {
+	public List<Object> getWithdrawDepositHistory(String userNo) {
 		int num = Integer.parseInt(userNo);
 		UserVO user = userRepo.findById(num).orElse(null);
 		CardVO card = cardRepo.findByUser(user);
 
-		String cardCode = card.getCardCode(); // 카드번호
-
 		List<WithdrawVO> withdrawList = wdRepo.findByCardOrderByWithdrawDateDesc(card);
 		List<DepositVO> depositList = dpRepo.findByCardOrderByDepositDateDesc(card);
 
-		List<TransactionVO> transactionList = new ArrayList<>();
+		List<Object> transactionList = new ArrayList<>();
 
 		// 출금 내역 + 입금 내역을 합쳐서 날짜별로 내림차순하기위해 TransactionVO로 변환하여 통합
 		for (WithdrawVO withdraw : withdrawList) {
-			TransactionVO transaction = new TransactionVO();
-			transaction.setAmount(withdraw.getWithdrawCash());
-			transaction.setAmountHistory(withdraw.getWithdrawHistory());
-			transaction.setDate(withdraw.getWithdrawDate());
-			transaction.setType("출금");
-			transaction.setStoreName(withdraw.getStore() != null ? withdraw.getStore().getStoreName() : null);
+			TransactionVO transaction = TransactionVO.builder()
+					.type("-")
+					.storeName(withdraw.getStore().getStoreName())
+					.amount(withdraw.getWithdrawCash())
+					.amountHistory(withdraw.getWithdrawHistory())
+					.date(withdraw.getWithdrawDate().toString().substring(2, withdraw.getWithdrawDate().toString().indexOf('.')).replaceAll("-", "/"))
+					.build();
 			transactionList.add(transaction);
 		}
 
 		for (DepositVO deposit : depositList) {
-			TransactionVO transaction = new TransactionVO();
-			transaction.setAmount(deposit.getDepositCash());
-			transaction.setAmountHistory(deposit.getDepositHistory());
-			transaction.setDate(deposit.getDepositDate());
-			transaction.setType("입금");
-			transaction.setStoreName("충전");
+			TransactionVO transaction = TransactionVO.builder()
+					.type("+")
+					.storeName("충전")
+					.amount(deposit.getDepositCash())
+					.amountHistory(deposit.getDepositHistory())
+					.date(deposit.getDepositDate().toString().substring(2, deposit.getDepositDate().toString().indexOf('.')).replaceAll("-", "/"))
+					.build();
 			transactionList.add(transaction);
 		}
 
 		// 통합된 리스트를 날짜를 기준으로 내림차순 정렬
-		Collections.sort(transactionList, new Comparator<TransactionVO>() {
-			public int compare(TransactionVO t1, TransactionVO t2) {
-				return t2.getDate().compareTo(t1.getDate());
+		Collections.sort(transactionList, new Comparator<Object>() {
+			public int compare(Object t1, Object t2) {
+				return ((TransactionVO)t2).getDate().compareTo(((TransactionVO)t1).getDate());
 			}
 		});
-
-		List<String> historyList = new ArrayList<>();
-
-		// 카드번호 추가
-		historyList.add("카드 번호:" + cardCode);
-
-		// 정렬된 내역 출력
-		for (TransactionVO transaction : transactionList) {
-			Integer amount = transaction.getAmount();
-			Integer amountHistory = transaction.getAmountHistory();
-			Timestamp date = transaction.getDate();
-			String type = transaction.getType();
-			String storeName = transaction.getStoreName();
-
-			if (amountHistory != null) {
-				if (type.equals("출금")) {
-					historyList.add("출금 누적:" + amountHistory);
-				} else if (type.equals("입금")) {
-					historyList.add("입금 누적:" + amountHistory);
-				}
-			}
-			if (amount != null) {
-				if (type.equals("출금")) {
-					historyList.add("출금 금액:" + amount);
-				} else if (type.equals("입금")) {
-					historyList.add("입금 금액:" + amount);
-				}
-			}
-			if (date != null) {
-				historyList.add("날짜:" + date);
-			}
-			
-			if (storeName != null) {
-				historyList.add("매장명:" + storeName);
-			}
-		}
-
-		return historyList;
+		
+		transactionList.add(0, card.getCardCode()); // 카드번호
+		
+		return transactionList;
 	}
 
 	// 카드 잔액 충전
