@@ -1,5 +1,6 @@
 package com.samsam.service;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -44,6 +45,21 @@ public class CardService {
 	WithdrawRepository wdRepo;
 	@Autowired
 	DepositRepository dpRepo;
+	
+	
+	// 포인트 내역서
+	public List<Object> getPointHistory(String userNo){
+		int num = Integer.parseInt(userNo);
+		UserVO user = userRepo.findById(num).orElse(null);
+		CardVO card = cardRepo.findByUser(user);
+		
+		List<PointVO> pointList = pointRepo.findByCardOrderByPointDateDesc(card);
+		List<Object> pointHistory = new ArrayList<>(pointList);
+		
+		pointHistory.add(0, card.getCardCode()); // 카드번호
+		
+		return pointHistory;
+	}
 
 	// 입출금 내역서
 	public List<Object> getWithdrawDepositHistory(String userNo) {

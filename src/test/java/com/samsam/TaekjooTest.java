@@ -1,6 +1,7 @@
 package com.samsam;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
@@ -227,7 +228,7 @@ public class TaekjooTest {
 	}
 	
 	// 입출금 내역 뽑아오기~
-	@Test
+	//@Test
 	void test8(){
 	    UserVO user = userRepo.findById(110).get();
 	    CardVO card = cardRepo.findByUser(user);
@@ -253,6 +254,27 @@ public class TaekjooTest {
 	        System.out.println("입금 누적: " + dpHistory);
 	        System.out.println("입금 날짜: " + dpDate);
 	    }
+	}
+	
+	@Test
+	void test9() {
+		UserVO user = userRepo.findById(110).get();
+		CardVO card = cardRepo.findByUser(user);
+		
+		List<PointVO> pointList = pointRepo.findByCardOrderByPointDateDesc(card);
+		
+		List<Object> pointHistory = new ArrayList<>();
+		
+		for(PointVO point : pointList) {
+			Integer ptSave = point.getPointSave();
+			Integer ptHistory = point.getPointHistory();
+			String ptMemo = point.getPointMemo();
+			Timestamp ptDate = point.getPointDate();
+			System.out.println(ptSave);
+			System.out.println(ptHistory);
+			System.out.println(ptMemo);
+			System.out.println(ptDate);
+		}
 	}
 
 }
