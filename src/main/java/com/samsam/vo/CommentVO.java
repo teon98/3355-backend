@@ -24,26 +24,26 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name="comments")
+@Table(name = "comments")
 @Entity
 @Data
-public class CommentVO implements Serializable{
-	
+public class CommentVO implements Serializable {
+
 	private static final long serialVersionUID = 1L;
 	@Id
-	@SequenceGenerator(name="COMM_SEQUENCE_GENERATOR", sequenceName = "COMM_SEQUENCE", initialValue = 500, allocationSize = 1)
-	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator = "COMM_SEQUENCE_GENERATOR")
+	@SequenceGenerator(name = "COMM_SEQUENCE_GENERATOR", sequenceName = "COMM_SEQUENCE", initialValue = 500, allocationSize = 1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "COMM_SEQUENCE_GENERATOR")
 	private Integer commNo;
-	@Column(length=300)
+	@Column(length = 300)
 	private String commContent;
 	@UpdateTimestamp
 	private Timestamp commDate;
-	
+
 	@ManyToOne
-	@JoinColumn(name="post_no")
+	@JoinColumn(name = "post_no")
 	private PostVO post;
-	
+
 	@ManyToOne
-	@JoinColumn(name="user_no")
+	@JoinColumn(name = "user_no")
 	private UserVO commuser;
 }

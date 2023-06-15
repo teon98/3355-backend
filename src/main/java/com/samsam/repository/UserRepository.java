@@ -1,15 +1,13 @@
 package com.samsam.repository;
 
-import java.util.List;
-import java.util.Optional;
-
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 import com.samsam.vo.UserVO;
 
 @Repository
-public interface UserRepository extends CrudRepository<UserVO, Integer>{
+public interface UserRepository extends CrudRepository<UserVO, Integer> {
+	
 	public UserVO findByUserEmail(String userEmail);
 	public UserVO findByUserNickname(String userNickname);
 	public UserVO findByUserEmailAndUserPass(String userEmail,String userPass);

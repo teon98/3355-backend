@@ -16,7 +16,6 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -29,7 +28,7 @@ import lombok.ToString;
 @Entity
 @Getter
 @Setter
-@ToString(exclude ="user")
+@ToString(exclude = "user")
 public class AlarmVO {
 
 	@Id
@@ -46,12 +45,12 @@ public class AlarmVO {
 	private Timestamp alarmDate;
 	@Column(nullable = false)
 	@Builder.Default
-	private Boolean alarmStatus=false;
+	private Boolean alarmStatus = false;
 
 	// 연관관계 설정n:1
 	// FK: 칼람이 board_bnofh 로 생성된다
-	@ManyToOne 
-	@JoinColumn(name = "user_no") 
+	@ManyToOne
+	@JoinColumn(name = "user_no")
 	UserVO user;
 
 }

@@ -1,6 +1,5 @@
 package com.samsam.service;
 
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -45,23 +44,31 @@ public class CardService {
 	WithdrawRepository wdRepo;
 	@Autowired
 	DepositRepository dpRepo;
-	
-	
+
 	// 포인트 내역서
-	public List<Object> getPointHistory(String userNo){
+	public List<Object> getPointHistory(String userNo) {
 		int num = Integer.parseInt(userNo);
 		UserVO user = userRepo.findById(num).orElse(null);
 		CardVO card = cardRepo.findByUser(user);
-		
+
 		List<PointVO> pointList = pointRepo.findByCardOrderByPointDateDesc(card);
-		List<Object> pointHistory = new ArrayList<>(pointList);
-		
+		List<Object> pointHistory = new ArrayList<>();
+
+		for (PointVO point : pointList) {
+			TransactionVO transaction = TransactionVO.builder().type(point.getPointSave() < 0 ? "-" : "+")
+					.storeName(point.getPointMemo())
+					.amount(point.getPointSave() < 0 ? point.getPointSave() * -1 : point.getPointSave())
+					.amountHistory(point.getPointHistory()).date(point.getPointDate().toString()
+							.substring(2, point.getPointDate().toString().indexOf('.')).replaceAll("-", "/"))
+					.build();
+			pointHistory.add(transaction);
+		}
 		pointHistory.add(0, card.getCardCode()); // 카드번호
-		
+
 		return pointHistory;
 	}
 
-	// 입출금 내역서
+	// 카드 입출금 내역서
 	public List<Object> getWithdrawDepositHistory(String userNo) {
 		int num = Integer.parseInt(userNo);
 		UserVO user = userRepo.findById(num).orElse(null);
@@ -74,23 +81,19 @@ public class CardService {
 
 		// 출금 내역 + 입금 내역을 합쳐서 날짜별로 내림차순하기위해 TransactionVO로 변환하여 통합
 		for (WithdrawVO withdraw : withdrawList) {
-			TransactionVO transaction = TransactionVO.builder()
-					.type("-")
-					.storeName(withdraw.getStore().getStoreName())
-					.amount(withdraw.getWithdrawCash())
-					.amountHistory(withdraw.getWithdrawHistory())
-					.date(withdraw.getWithdrawDate().toString().substring(2, withdraw.getWithdrawDate().toString().indexOf('.')).replaceAll("-", "/"))
+			TransactionVO transaction = TransactionVO.builder().type("-").storeName(withdraw.getStore().getStoreName())
+					.amount(withdraw.getWithdrawCash()).amountHistory(withdraw.getWithdrawHistory())
+					.date(withdraw.getWithdrawDate().toString()
+							.substring(2, withdraw.getWithdrawDate().toString().indexOf('.')).replaceAll("-", "/"))
 					.build();
 			transactionList.add(transaction);
 		}
 
 		for (DepositVO deposit : depositList) {
-			TransactionVO transaction = TransactionVO.builder()
-					.type("+")
-					.storeName("충전")
-					.amount(deposit.getDepositCash())
-					.amountHistory(deposit.getDepositHistory())
-					.date(deposit.getDepositDate().toString().substring(2, deposit.getDepositDate().toString().indexOf('.')).replaceAll("-", "/"))
+			TransactionVO transaction = TransactionVO.builder().type("+").storeName("충전")
+					.amount(deposit.getDepositCash()).amountHistory(deposit.getDepositHistory())
+					.date(deposit.getDepositDate().toString()
+							.substring(2, deposit.getDepositDate().toString().indexOf('.')).replaceAll("-", "/"))
 					.build();
 			transactionList.add(transaction);
 		}
@@ -98,12 +101,12 @@ public class CardService {
 		// 통합된 리스트를 날짜를 기준으로 내림차순 정렬
 		Collections.sort(transactionList, new Comparator<Object>() {
 			public int compare(Object t1, Object t2) {
-				return ((TransactionVO)t2).getDate().compareTo(((TransactionVO)t1).getDate());
+				return ((TransactionVO) t2).getDate().compareTo(((TransactionVO) t1).getDate());
 			}
 		});
-		
+
 		transactionList.add(0, card.getCardCode()); // 카드번호
-		
+
 		return transactionList;
 	}
 

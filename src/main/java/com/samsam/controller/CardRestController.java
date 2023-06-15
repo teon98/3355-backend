@@ -33,10 +33,10 @@ public class CardRestController {
 	public List<Object> getWithdrawDepositHistory(@PathVariable String userNo) {
 		return cardService.getWithdrawDepositHistory(userNo);
 	}
-	
+
 	// 포인트 내역
-	@GetMapping("pthistory/{userNo}")
-	public List<Object> getPointHistory(@PathVariable String userNo){
+	@GetMapping("/pthistory/{userNo}")
+	public List<Object> getPointHistory(@PathVariable String userNo) {
 		return cardService.getPointHistory(userNo);
 	}
 
