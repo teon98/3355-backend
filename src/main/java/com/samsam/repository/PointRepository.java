@@ -10,6 +10,5 @@ import com.samsam.vo.PointVO;
 public interface PointRepository extends CrudRepository<PointVO, Integer> {
 
 	public PointVO findByCard(CardVO card);
-	
 	public List<PointVO> findByCardOrderByPointDateDesc(CardVO card);
 }

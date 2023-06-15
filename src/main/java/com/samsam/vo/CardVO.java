@@ -1,4 +1,5 @@
 package com.samsam.vo;
+
 import java.sql.Timestamp;
 
 import javax.persistence.CascadeType;
@@ -29,30 +30,30 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class CardVO {
 	@Id
-	@SequenceGenerator(name="CARDS_SEQUENCE_GENERATOR", sequenceName = "CARDS_SEQUENCE", initialValue = 1853, allocationSize = 2)
-	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator = "CARDS_SEQUENCE_GENERATOR")
+	@SequenceGenerator(name = "CARDS_SEQUENCE_GENERATOR", sequenceName = "CARDS_SEQUENCE", initialValue = 1853, allocationSize = 2)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "CARDS_SEQUENCE_GENERATOR")
 	private Integer cardSeq;
-	
+
 	@Column(nullable = true)
 	private String cardCode;
-	
+
 	@Column(nullable = false)
 	private Integer cardPass;
-	
+
 	@Column(nullable = false)
 	@Builder.Default
 	private Integer accountBalance = 0;
-	
+
 	@Column(nullable = false)
 	@Builder.Default
 	private Integer pointBalance = 0;
-	
+
 	@Column(nullable = false)
 	@CreationTimestamp
 	private Timestamp cardDate;
-	
+
 	@JsonIgnore
-	@OneToOne(cascade = CascadeType.ALL) 
-	@JoinColumn(name="user_no")
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "user_no")
 	private UserVO user;
 }

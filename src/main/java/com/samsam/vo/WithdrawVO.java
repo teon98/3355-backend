@@ -25,30 +25,29 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class WithdrawVO {
-	
+
 	@Id
-	@SequenceGenerator(name="WITHDRAWS_SEQUENCE_GENERATOR", sequenceName = "WITHDRAWS_SEQUENCE", initialValue = 1, allocationSize = 1)
-	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator = "WITHDRAWS_SEQUENCE_GENERATOR")
+	@SequenceGenerator(name = "WITHDRAWS_SEQUENCE_GENERATOR", sequenceName = "WITHDRAWS_SEQUENCE", initialValue = 1, allocationSize = 1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "WITHDRAWS_SEQUENCE_GENERATOR")
 	private Integer withdrawNo;
-	
+
 	@Column(nullable = true)
 	private Integer withdrawCash;
-	
+
 	@Column(nullable = false)
 	private Integer withdrawHistory;
-	
+
 	@Column(nullable = true)
 	private Integer withdrawPoint;
-	
+
 	@Column(nullable = false)
 	@CreationTimestamp
 	private Timestamp withdrawDate;
-	
+
 	@ManyToOne
 	private CardVO card;
-	
+
 	@ManyToOne
 	private StoreVO store;
-	
 
 }

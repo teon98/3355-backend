@@ -14,26 +14,25 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 
 //태영
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name="tags")
+@Table(name = "tags")
 @Entity
 @Data
-public class TagVO implements Serializable{
-	
+public class TagVO implements Serializable {
+
 	private static final long serialVersionUID = 1L;
-	
+
 	@Id
-	@SequenceGenerator(name="HASHTAG_SEQUENCE_GENERATOR", sequenceName = "HASHTAG_SEQUENCE", initialValue = 1, allocationSize = 1)
-	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator = "HASHTAG_SEQUENCE_GENERATOR")
+	@SequenceGenerator(name = "HASHTAG_SEQUENCE_GENERATOR", sequenceName = "HASHTAG_SEQUENCE", initialValue = 1, allocationSize = 1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "HASHTAG_SEQUENCE_GENERATOR")
 	private Integer tagNo;
 	@Column(unique = true)
 	private String tagContent;
 	@Column
 	private Integer tagCount;
-	
+
 }

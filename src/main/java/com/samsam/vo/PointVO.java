@@ -26,23 +26,23 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class PointVO {
 	@Id
-	@SequenceGenerator(name="POINTS_SEQUENCE_GENERATOR", sequenceName = "POINTS_SEQUENCE", initialValue = 1, allocationSize = 1)
-	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator = "POINTS_SEQUENCE_GENERATOR")
+	@SequenceGenerator(name = "POINTS_SEQUENCE_GENERATOR", sequenceName = "POINTS_SEQUENCE", initialValue = 1, allocationSize = 1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "POINTS_SEQUENCE_GENERATOR")
 	private Integer pointNo;
-	
+
 	@Column(nullable = false)
 	private Integer pointSave;
-	
+
 	@Column(nullable = false)
 	private String pointMemo;
-	
+
 	@Column(nullable = false)
 	private Integer pointHistory;
-	
+
 	@Column(nullable = false)
 	@CreationTimestamp
 	private Timestamp pointDate;
-	
+
 	@ManyToOne
 	private CardVO card;
 }
