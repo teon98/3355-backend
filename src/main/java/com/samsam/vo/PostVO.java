@@ -47,4 +47,7 @@ public class PostVO implements Serializable {
 	@JoinColumn(name = "user_no")
 	private UserVO user;
 
+	@OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
+	private List<PostTagVO> tags;
+	
 }

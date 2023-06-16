@@ -34,7 +34,7 @@ public class UserRestConttoller {
 	@Autowired
 	JavaMailSender javaMailSender;
 
-	//이메일 중복체크
+	// 이메일 중복체크
 	@GetMapping(value = "/emailDup.sam/{userEmail}")
 	public String EmailDup(@PathVariable String userEmail) {
 		String message = "";
@@ -48,7 +48,7 @@ public class UserRestConttoller {
 		return message;
 	}
 
-	//별명 중복체크
+	// 별명 중복체크
 	@GetMapping(value = "/nicknameDup.sam/{userNickname}")
 	public String NicknameDup(@PathVariable String userNickname) {
 		String message = "";
@@ -63,7 +63,7 @@ public class UserRestConttoller {
 	}
 
 	// 유저 회원가입
-	@PostMapping(value = "/insert.sam", consumes = "application/json") 
+	@PostMapping(value = "/insert.sam", consumes = "application/json")
 	public Integer UserRegisterPost(@RequestBody UserVO user) {
 
 		UserVO newuser = userRepo.save(user);
@@ -73,37 +73,55 @@ public class UserRestConttoller {
 		return newuser.getUserNo();
 	}
 
-	//oauth회원가입
+	// oauth회원가입1
 	@PostMapping(value = "/signGoogle.sam", consumes = "application/json")
 	public Integer GoogleSignUP(@RequestBody UserVO user) {
-		Integer message =0;
+		Integer message = 0;
 
 		if (userRepo.findByUserEmail(user.getUserEmail()) == null) {
-		
-		userRepo.save(user);
-		message = 1;
-		}else {
-			message=0;
+			// UserVO user1 = userRepo.findByUserEmail(user.getUserEmail());
+
+			userRepo.save(user);
+			message = 1;
+		} else {
+			message = 0;
 		}
-		
+
 		return message;
 	}
-	
-	//oauth이메일 가져오기
-	@GetMapping(value="/oauthEmail.sam")
+
+	// oauth회원가입2
+	@PostMapping(value = "/signGoogleInsert.sam", consumes = "application/json")
+	public Integer GoogleSignUPInsert(@RequestBody UserVO user) {
+
+		UserVO user1= userRepo.findByUserEmail(user.getUserEmail());
+		user1.setUserPass(user.getUserPass());
+		user1.setUserBirth(user.getUserBirth());
+		user1.setUserGender(user.getUserGender());
+		user1.setUserNickname(user.getUserNickname());
+		
+		UserVO newuser = userRepo.save(user1);
+		ProfileVO profile = ProfileVO.builder().user(newuser).build();
+
+		proRepo.save(profile);
+		return newuser.getUserNo();
+
+	}
+
+	// oauth이메일 가져오기
+	@GetMapping(value = "/oauthEmail.sam")
 	public String oauthEmail() {
 		UserVO newuser = userRepo.findByUserBirthIsNull();
 		System.out.println(newuser.getUserEmail());
 		return newuser.getUserEmail();
 	}
-	
-	@PostMapping(value="/insertCard.sam",consumes = "application/json")//카드 생성
-	public String CardRegisterPost(@RequestBody CardVO card,@RequestParam Integer userNo) {
+
+	// 카드 생성
+	@PostMapping(value = "/insertCard.sam", consumes = "application/json")
+	public String CardRegisterPost(@RequestBody CardVO card, @RequestParam Integer userNo) {
 
 		System.out.println(card);
-//		
-//		UserVO user = userRepo.findById(userNo).get();
-//		CardVO card1 =CardVO.builder().cardPass(Integer.parseInt(cardPass)).user(user).build();
+
 		UserVO user = userRepo.findById(userNo).get();
 		CardVO savedCard = cardRepo.save(card);
 
@@ -177,4 +195,3 @@ public class UserRestConttoller {
 		return message;
 	}
 }
-	
