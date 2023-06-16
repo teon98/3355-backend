@@ -17,6 +17,7 @@ import com.samsam.repository.CommRepository;
 import com.samsam.repository.FollowRepository;
 import com.samsam.repository.PostRepository;
 import com.samsam.repository.PostTagRepository;
+import com.samsam.repository.ProfileRepository;
 import com.samsam.repository.TagRepository;
 import com.samsam.repository.UserRepository;
 import com.samsam.vo.CommentVO;
@@ -24,6 +25,7 @@ import com.samsam.vo.FollowId;
 import com.samsam.vo.FollowVO;
 import com.samsam.vo.PostTagVO;
 import com.samsam.vo.PostVO;
+import com.samsam.vo.ProfileVO;
 import com.samsam.vo.TagVO;
 import com.samsam.vo.UserVO;
 
@@ -42,9 +44,20 @@ public class TaeyoungTest {
 	PostTagRepository posttagRepo;
 	@Autowired
 	FollowRepository followRepo;
+	@Autowired
+	ProfileRepository profileRepo;
 
-	
 	@Test
+	void test9() {
+		//userNo로 profileDB에서 select해오기
+		UserVO user = userRepo.findById(1).get();
+		
+		ProfileVO profile = profileRepo.findByUser(user);
+		System.out.println(user.getUserNickname());
+		System.out.println(profile);
+	}
+	
+	//@Test
 	void test8() {
 		List<Object> result = new ArrayList<>();
 		List<Integer> followings =  followRepo.findByFollowStart(1);

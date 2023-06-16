@@ -14,6 +14,8 @@ import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -48,6 +50,7 @@ public class ProfileVO implements Serializable {
 
 	@OneToOne
 	@JoinColumn(name = "user_no")
+	@JsonIgnore
 	UserVO user;
 
 }
