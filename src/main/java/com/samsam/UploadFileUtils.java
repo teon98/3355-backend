@@ -38,7 +38,7 @@ public class UploadFileUtils {
 //			Thumbnails.of(image).size(THUMB_WIDTH, THUMB_HEIGHT).toFile(thumbnail);
 //		}
 		
-		System.out.println("fileUpload newFileName: " + newFileName);
+		//System.out.println("fileUpload newFileName: " + newFileName);
 		return newFileName;
 	}
 	
@@ -49,11 +49,11 @@ public class UploadFileUtils {
 		String datePath = monthPath + File.separator + new DecimalFormat("00").format(cal.get(Calendar.DATE));
 		
 		int pos = uploadPath.lastIndexOf("\\");
-		System.out.println("pos: " + pos);
+		//System.out.println("pos: " + pos);
 		String folder = uploadPath.substring(0,pos);
-		System.out.println("folder: " + folder);
+		//System.out.println("folder: " + folder);
 		makeDir(folder, uploadPath.substring(pos));
-		System.out.println(folder + ":" + uploadPath.substring(pos));
+		//System.out.println(folder + ":" + uploadPath.substring(pos));
 		 
 		makeDir(uploadPath, monthPath, datePath );
 		return datePath;
