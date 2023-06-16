@@ -1,6 +1,7 @@
 package com.samsam.service;
 
 import java.io.IOException;
+import java.util.HashMap;
 
 import javax.transaction.Transactional;
 
@@ -19,12 +20,24 @@ public class ProfileService {
 	
 	@Autowired
 	private S3Uploader s3uploader;
-	
 	@Autowired
 	ProfileRepository profileRepo;
-	
 	@Autowired
 	UserRepository userRepo;
+	
+	
+	//userNO로 해당 user의 profile select
+	public HashMap<String, Object> getProfile(int userNo) {
+		UserVO user = userRepo.findById(1).get();
+		
+		ProfileVO profile = profileRepo.findByUser(user);
+		
+		HashMap<String, Object> result = new HashMap<String, Object>();
+		result.put("userNickname", user.getUserNickname());
+		result.put("profileVO", profile);
+		return result;
+	}
+	
 	
 	//S3에 프로필 이미지 업로드
 	public Integer uploadImg(MultipartFile image, int userNo) throws IOException {
