@@ -201,10 +201,9 @@ public class CardService {
 		// 결제 시, 포인트 사용할 수 있음.
 		// 결제 시, 등급별로 차등 적립률 적용하여 포인트 적립
 		String msg = "OK";
+		int num = Integer.parseInt(obj.get("userNo"));
 
-		int userNo = 110;
-
-		UserVO user = userRepo.findById(userNo).get();
+		UserVO user = userRepo.findById(num).get();
 		ProfileVO profile = profRepo.findByUser(user);
 
 		String level = profile.getProfileLevel().toString();
