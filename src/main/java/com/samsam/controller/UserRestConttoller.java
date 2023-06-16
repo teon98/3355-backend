@@ -33,8 +33,9 @@ public class UserRestConttoller {
 	CardRepository cardRepo;
 	@Autowired
 	JavaMailSender javaMailSender;
-	
-	@GetMapping(value = "/emailDup.sam/{userEmail}")//이메일 중복체크
+
+	// 이메일 중복체크
+	@GetMapping(value = "/emailDup.sam/{userEmail}")
 	public String EmailDup(@PathVariable String userEmail) {
 		String message = "";
 //		return userRepo.findByUserEmail(userEmail)==null?"not found":"OK";
@@ -46,8 +47,9 @@ public class UserRestConttoller {
 		}
 		return message;
 	}
-	
-	@GetMapping(value = "/nicknameDup.sam/{userNickname}")//별명 중복체크
+
+	// 별명 중복체크
+	@GetMapping(value = "/nicknameDup.sam/{userNickname}")
 	public String NicknameDup(@PathVariable String userNickname) {
 		String message = "";
 //		return userRepo.findByUserEmail(userEmail)==null?"not found":"OK";
@@ -60,27 +62,69 @@ public class UserRestConttoller {
 		return message;
 	}
 
-	@PostMapping(value = "/insert.sam", consumes = "application/json") // 유저 회원가입
+	// 유저 회원가입
+	@PostMapping(value = "/insert.sam", consumes = "application/json")
 	public Integer UserRegisterPost(@RequestBody UserVO user) {
 
 		UserVO newuser = userRepo.save(user);
-		ProfileVO profile = ProfileVO.builder()
-				.user(newuser)
-				.build();
-		
+		ProfileVO profile = ProfileVO.builder().user(newuser).build();
+
 		proRepo.save(profile);
 		return newuser.getUserNo();
 	}
-	
-	@PostMapping(value="/insertCard.sam",consumes = "application/json")//카드 생성
-	public String CardRegisterPost(@RequestBody CardVO card,@RequestParam Integer userNo) {
+
+	// oauth회원가입1
+	@PostMapping(value = "/signGoogle.sam", consumes = "application/json")
+	public Integer GoogleSignUP(@RequestBody UserVO user) {
+		Integer message = 0;
+
+		if (userRepo.findByUserEmail(user.getUserEmail()) == null) {
+			// UserVO user1 = userRepo.findByUserEmail(user.getUserEmail());
+
+			userRepo.save(user);
+			message = 1;
+		} else {
+			message = 0;
+		}
+
+		return message;
+	}
+
+	// oauth회원가입2
+	@PostMapping(value = "/signGoogleInsert.sam", consumes = "application/json")
+	public Integer GoogleSignUPInsert(@RequestBody UserVO user) {
+
+		UserVO user1= userRepo.findByUserEmail(user.getUserEmail());
+		user1.setUserPass(user.getUserPass());
+		user1.setUserBirth(user.getUserBirth());
+		user1.setUserGender(user.getUserGender());
+		user1.setUserNickname(user.getUserNickname());
+		
+		UserVO newuser = userRepo.save(user1);
+		ProfileVO profile = ProfileVO.builder().user(newuser).build();
+
+		proRepo.save(profile);
+		return newuser.getUserNo();
+
+	}
+
+	// oauth이메일 가져오기
+	@GetMapping(value = "/oauthEmail.sam")
+	public String oauthEmail() {
+		UserVO newuser = userRepo.findByUserBirthIsNull();
+		System.out.println(newuser.getUserEmail());
+		return newuser.getUserEmail();
+	}
+
+	// 카드 생성
+	@PostMapping(value = "/insertCard.sam", consumes = "application/json")
+	public String CardRegisterPost(@RequestBody CardVO card, @RequestParam Integer userNo) {
+
 		System.out.println(card);
-//		
-//		UserVO user = userRepo.findById(userNo).get();
-//		CardVO card1 =CardVO.builder().cardPass(Integer.parseInt(cardPass)).user(user).build();
+
 		UserVO user = userRepo.findById(userNo).get();
 		CardVO savedCard = cardRepo.save(card);
-		
+
 		// 카드 시퀀스(1000~9999)로 카드 번호 생성
 		String rst = "3355";
 		rst += "-" + savedCard.getCardSeq();
@@ -93,61 +137,61 @@ public class UserRestConttoller {
 
 		return "성공^^";
 	}
-	
-	@GetMapping(value="/login.sam")//로그인
-	public int UserLogin(@RequestParam String userEmail,@RequestParam String userPass) {
-		int userNo=0;
-		if (userRepo.findByUserEmailAndUserPass(userEmail,userPass) != null) {
-			userNo = userRepo.findByUserEmailAndUserPass(userEmail,userPass).getUserNo();
+
+	@GetMapping(value = "/login.sam") // 로그인
+	public int UserLogin(@RequestParam String userEmail, @RequestParam String userPass) {
+		int userNo = 0;
+		if (userRepo.findByUserEmailAndUserPass(userEmail, userPass) != null) {
+			userNo = userRepo.findByUserEmailAndUserPass(userEmail, userPass).getUserNo();
 		} else {
 			userNo = 0;
 		}
 		return userNo;
 	}
-	
-	@PutMapping(value="/findPass.sam")//비밀번호 찾기
-	public Integer FindPass(@RequestParam String userEmail,@RequestParam String userNickname) {
-		Integer userNo=0;
+
+	@PutMapping(value = "/findPass.sam") // 비밀번호 찾기
+	public Integer FindPass(@RequestParam String userEmail, @RequestParam String userNickname) {
+		Integer userNo = 0;
 		if (userRepo.findByUserEmailAndUserNickname(userEmail, userNickname) != null) {
-			UserVO user = userRepo.findByUserEmailAndUserNickname(userEmail,userNickname);
+			UserVO user = userRepo.findByUserEmailAndUserNickname(userEmail, userNickname);
 			Random random = new Random();
-			String userPass = (random.nextInt(9000) + 1000)+"";
+			String userPass = (random.nextInt(9000) + 1000) + "";
 			user.setUserPass(userPass);
-			
+
 			userRepo.save(user);
-			
+
 			SimpleMailMessage message2 = new SimpleMailMessage();
 			message2.setFrom("shinhan3355@gmail.com");
 			message2.setTo(userEmail);
 			message2.setSubject("임시 비밀번호");
-			message2.setText(userPass); 
-			
+			message2.setText(userPass);
+
 			javaMailSender.send(message2);
-			
+
 			System.out.println("성공");
-			
+
 			userNo = user.getUserNo();
 		} else {
-			userNo=0;
+			userNo = 0;
 		}
-		
+
 		return userNo;
 	}
 
-	//비밀번호 변경
+	// 비밀번호 변경
 	@PutMapping(value = "/PassChange.sam")
-	public String PassChange(@RequestParam String tempPass,@RequestParam String userPass) {
+	public String PassChange(@RequestParam String tempPass, @RequestParam String userPass) {
 		String message = "";
-		
-		if(userRepo.findByUserPass(tempPass)==null) {
-			message="실패";
-		}else {
+
+		if (userRepo.findByUserPass(tempPass) == null) {
+			message = "실패";
+		} else {
 			UserVO user = userRepo.findByUserPass(tempPass);
 			user.setUserPass(userPass);
 			userRepo.save(user);
-			message="성공";
+			message = "성공";
 		}
-		
+
 		return message;
 	}
 }

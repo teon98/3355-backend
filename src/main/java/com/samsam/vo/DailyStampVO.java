@@ -21,21 +21,21 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name="dailystamps")
-@Entity 
+@Table(name = "dailystamps")
+@Entity
 @Data
-public class DailyStampVO {//출석체크 브이오
+public class DailyStampVO {// 출석체크 브이오
 
 	@Id
-	@SequenceGenerator(name="DAILYS_SEQUENCE_GENERATOR", sequenceName = "DAILYS_SEQUENCE", initialValue = 600, allocationSize = 1)
-	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator = "DAILYS_SEQUENCE_GENERATOR")
+	@SequenceGenerator(name = "DAILYS_SEQUENCE_GENERATOR", sequenceName = "DAILYS_SEQUENCE", initialValue = 600, allocationSize = 1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "DAILYS_SEQUENCE_GENERATOR")
 	private Integer dailyNo;
-	
-	@CreationTimestamp	
+
+	@CreationTimestamp
 	private Timestamp dailyDate;
-	
-	//연관관계 설정n:1
-	//FK: 칼람이 board_bnofh 로 생성된다
+
+	// 연관관계 설정n:1
+	// FK: 칼람이 board_bnofh 로 생성된다
 	@ManyToOne
 	@JoinColumn(name = "user_no")
 	UserVO user;

@@ -12,31 +12,28 @@ import javax.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import lombok.ToString;
 
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name="posttag")
+@Table(name = "posttag")
 @Entity
 @ToString
 @Data
 public class PostTagVO {
-	private static final long serialVersionUID = 1L;
 	@Id
-	@SequenceGenerator(name="PT_SEQUENCE_GENERATOR", sequenceName = "PT_SEQUENCE", initialValue = 1, allocationSize = 1)
-	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator = "PT_SEQUENCE_GENERATOR")
+	@SequenceGenerator(name = "PT_SEQUENCE_GENERATOR", sequenceName = "PT_SEQUENCE", initialValue = 1, allocationSize = 1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "PT_SEQUENCE_GENERATOR")
 	private Integer ptNo;
-	
+
 	@ManyToOne
-	@JoinColumn(name="post_no")
+	@JoinColumn(name = "post_no")
 	private PostVO post;
-	
+
 	@ManyToOne
-	@JoinColumn(name="tag_no")
+	@JoinColumn(name = "tag_no")
 	private TagVO tag;
-	
+
 }
