@@ -47,7 +47,22 @@ public class TaeyoungTest {
 	@Autowired
 	ProfileRepository profileRepo;
 
-	@Test
+	void test11() {
+		
+		//user nickname으로 user 프로필 가져옴.
+		
+		
+		
+	}
+	
+	//@Test
+	void test10() {
+		UserVO user = userRepo.findById(1).get();
+		
+		user.getProfile();
+	}
+	
+	//@Test
 	void test9() {
 		//userNo로 profileDB에서 select해오기
 		UserVO user = userRepo.findById(1).get();
@@ -104,6 +119,8 @@ public class TaeyoungTest {
 			UserVO user = userRepo.findById(id).get();
 			followinglist.add(user);
 		});
+		
+		
 		
 		for(UserVO user : followinglist) {
 			System.out.println(user.getUserNo());
