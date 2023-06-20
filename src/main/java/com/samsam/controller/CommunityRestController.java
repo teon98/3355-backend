@@ -25,4 +25,9 @@ public class CommunityRestController {
 		return communityService.followingProfileImgList(userNo);
 	}
 	
+	@GetMapping(value = "userProfile")
+	public String UserPofile(int userNo) {
+		return communityService.UserPofile(userNo);
+	}
+	
 }

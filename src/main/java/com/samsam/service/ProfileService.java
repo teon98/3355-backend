@@ -28,7 +28,7 @@ public class ProfileService {
 	
 	//userNO로 해당 user의 profile select
 	public HashMap<String, Object> getProfile(int userNo) {
-		UserVO user = userRepo.findById(1).get();
+		UserVO user = userRepo.findById(userNo).get();
 		
 		ProfileVO profile = profileRepo.findByUser(user);
 		
@@ -39,16 +39,20 @@ public class ProfileService {
 	}
 	
 	
-	//S3에 프로필 이미지 업로드
-	public Integer uploadImg(MultipartFile image, int userNo) throws IOException {
+	//S3에 프로필 이미지 업로드 + about수정
+	public Integer uploadImg(MultipartFile image, int userNo, String profileAbout) throws IOException {
 		System.out.println("Upload S3 Images with profile");
 		ProfileVO profile = null;
-		if(!image.isEmpty()) {
+		UserVO user = userRepo.findById(userNo).get();
+		profile = profileRepo.findByUser(user);
+		if(image!=null && !image.isEmpty()) {
 			String storedFileName = s3uploader.upload(image, "profile");
-			UserVO user = userRepo.findById(userNo).get();
-			profile = profileRepo.findByUser(user);
-			profile.setProfileImg(storedFileName);
+			profile.setProfileImg(storedFileName);	
 		}
+		if(!profileAbout.isEmpty()) {
+			profile.setProfileAbout(profileAbout);
+		}
+		
 		ProfileVO saveProfile = profileRepo.save(profile);
 		return saveProfile.getProfileId();
 	}
