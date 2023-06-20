@@ -148,34 +148,22 @@ public class CardService {
 		int num = Integer.parseInt(userNo);
 		UserVO user = userRepo.findById(num).get();
 		CardVO card = cardRepo.findByUser(user);
-		List<WithdrawVO> list = wdRepo.findByCardOrderByWithdrawDateDesc(card);
-		WithdrawVO wd = list.get(0);
+		
+		List<WithdrawVO> wdList = wdRepo.findByCardOrderByWithdrawDateDesc(card);
+		WithdrawVO wd = wdList.get(0);
 		int spendMoney = wd.getWithdrawCash();
 		int spendPoint = wd.getWithdrawPoint();
-
-		String level = user.getProfile().getProfileLevel().toString();
-		double ratio = 0.0;
-		switch (level.charAt(0)) {
-		case 'B':
-			ratio = 0.05;
-			break;
-		case 'S':
-			ratio = 0.1;
-			break;
-		case 'G':
-			ratio = 0.15;
-			break;
-		case 'P':
-			ratio = 0.2;
-			break;
-		}
-
+		
+		List<PointVO> poList = pointRepo.findByCardOrderByPointDateDesc(card);
+		PointVO point = poList.get(0);
+		double ratio =  Math.round((double)point.getPointSave() / (double)spendMoney * 100) / 100.0;
+		
 		map.put("storeName", wd.getStore().getStoreName());
 		map.put("withdrawDate", wd.getWithdrawDate().toString());
+		map.put("amount", (spendMoney + spendPoint) + "");
 		map.put("withdrawCash", spendMoney + "");
 		map.put("point", spendPoint + "");
-		map.put("amount", (spendMoney + spendPoint) + "");
-		map.put("pointSave", (int) (wd.getWithdrawCash() * ratio) + "");
+		map.put("pointSave", point.getPointSave() + "");
 		map.put("levelRatio", ratio + "");
 
 		return map;
