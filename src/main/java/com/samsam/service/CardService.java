@@ -5,11 +5,14 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.samsam.repository.AlarmRepository;
 import com.samsam.repository.CardRepository;
 import com.samsam.repository.DepositRepository;
 import com.samsam.repository.PointRepository;
@@ -17,6 +20,7 @@ import com.samsam.repository.ProfileRepository;
 import com.samsam.repository.StoreRepository;
 import com.samsam.repository.UserRepository;
 import com.samsam.repository.WithdrawRepository;
+import com.samsam.vo.AlarmVO;
 import com.samsam.vo.CardVO;
 import com.samsam.vo.DepositVO;
 import com.samsam.vo.PointVO;
@@ -44,6 +48,18 @@ public class CardService {
 	WithdrawRepository wdRepo;
 	@Autowired
 	DepositRepository dpRepo;
+	@Autowired
+	AlarmRepository alaRepo;
+	
+	// 읽지 않은 알림 전체 + 읽은 알림 5건 조회
+	public List<AlarmVO> getAlarm(String userNo) {
+		int userNum = Integer.parseInt(userNo);
+		List<AlarmVO> unreadList = alaRepo.findUnreadAlarms(userNum, 0);
+		List<AlarmVO> readList = alaRepo.findReadAlarms(userNum, 1);
+		
+		List<AlarmVO> resultList = Stream.concat(unreadList.stream(), readList.stream()).collect(Collectors.toList());
+		return resultList;
+	}
 
 	// 포인트 내역서
 	public List<Object> getPointHistory(String userNo) {

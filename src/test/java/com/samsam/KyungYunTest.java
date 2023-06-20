@@ -2,12 +2,15 @@ package com.samsam;
 
 import java.util.List;
 import java.util.Random;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.samsam.repository.AlarmRepository;
 import com.samsam.repository.CardRepository;
 import com.samsam.repository.CardcustomRepository;
 import com.samsam.repository.DailyStampRepository;
@@ -19,6 +22,7 @@ import com.samsam.repository.StoreRepository;
 import com.samsam.repository.UserRepository;
 import com.samsam.repository.WithdrawRepository;
 import com.samsam.repository.WorkRepository;
+import com.samsam.vo.AlarmVO;
 import com.samsam.vo.CardVO;
 import com.samsam.vo.CardcustomVO;
 import com.samsam.vo.DepositVO;
@@ -56,7 +60,22 @@ public class KyungYunTest {
 	WithdrawRepository wdRepo;
 	@Autowired
 	CardcustomRepository cardcusRepo;
-
+	@Autowired
+	AlarmRepository alaRepo;
+	
+	// 읽지 않은 알림 전체 + 읽은 알림 5건 조회
+//	@Test
+	void getAlarm() {
+		String userNo = 2+"";
+		int userNum = Integer.parseInt(userNo);
+		List<AlarmVO> unreadList = alaRepo.findUnreadAlarms(userNum, 0);
+		List<AlarmVO> readList = alaRepo.findReadAlarms(userNum, 1);
+		
+		List<AlarmVO> resultList = Stream.concat(unreadList.stream(), readList.stream()).collect(Collectors.toList());
+		for (AlarmVO alarm : resultList) {
+			System.out.println(alarm);
+		}
+	}
 	
 	// 결제 정보 불러오기 (결제 완료 후, 영수증처럼 보려고)
 //	@Test

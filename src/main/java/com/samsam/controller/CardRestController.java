@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.samsam.service.CardService;
+import com.samsam.vo.AlarmVO;
 import com.samsam.vo.CardVO;
 
 @RestController
@@ -22,6 +23,12 @@ public class CardRestController {
 	@Autowired
 	CardService cardService;
 
+	// 읽지 않은 알림 전체 + 읽은 알림 5건 조회
+	@GetMapping("/alarm")
+	public List<AlarmVO> getAlarm(String userNo) {
+		return cardService.getAlarm(userNo);
+	}
+	
 	// 카드 잔액 충전
 	@PostMapping("/charge")
 	public String chargeBalance(@RequestBody HashMap<String, String> map) {
