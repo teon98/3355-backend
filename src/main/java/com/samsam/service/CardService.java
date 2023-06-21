@@ -50,13 +50,18 @@ public class CardService {
 	DepositRepository dpRepo;
 	@Autowired
 	AlarmRepository alaRepo;
-	
+
+	// 알림 배지 갯수
+	public int getCountAlarm(String userNo) {
+		return alaRepo.findUnreadCnt(Integer.parseInt(userNo), 0);
+	}
+
 	// 읽지 않은 알림 전체 + 읽은 알림 5건 조회
 	public List<AlarmVO> getAlarm(String userNo) {
 		int userNum = Integer.parseInt(userNo);
 		List<AlarmVO> unreadList = alaRepo.findUnreadAlarms(userNum, 0);
 		List<AlarmVO> readList = alaRepo.findReadAlarms(userNum, 1);
-		
+
 		List<AlarmVO> resultList = Stream.concat(unreadList.stream(), readList.stream()).collect(Collectors.toList());
 		return resultList;
 	}
@@ -164,16 +169,16 @@ public class CardService {
 		int num = Integer.parseInt(userNo);
 		UserVO user = userRepo.findById(num).get();
 		CardVO card = cardRepo.findByUser(user);
-		
+
 		List<WithdrawVO> wdList = wdRepo.findByCardOrderByWithdrawDateDesc(card);
 		WithdrawVO wd = wdList.get(0);
 		int spendMoney = wd.getWithdrawCash();
 		int spendPoint = wd.getWithdrawPoint();
-		
+
 		List<PointVO> poList = pointRepo.findByCardOrderByPointDateDesc(card);
 		PointVO point = poList.get(0);
-		double ratio =  Math.round((double)point.getPointSave() / (double)spendMoney * 100) / 100.0;
-		
+		double ratio = Math.round((double) point.getPointSave() / (double) spendMoney * 100) / 100.0;
+
 		map.put("storeName", wd.getStore().getStoreName());
 		map.put("withdrawDate", wd.getWithdrawDate().toString());
 		map.put("amount", (spendMoney + spendPoint) + "");
@@ -280,7 +285,6 @@ public class CardService {
 			storeName = store.getStoreName();
 
 		return storeName;
-
 	}
 
 }
