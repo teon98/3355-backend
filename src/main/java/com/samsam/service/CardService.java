@@ -51,6 +51,12 @@ public class CardService {
 	@Autowired
 	AlarmRepository alaRepo;
 	
+	// 알림 배지 갯수
+	public int getCountAlarm(String userNo) {
+		int userNum = Integer.parseInt(userNo);
+		return alaRepo.findUnreadCnt(userNum, 0);
+	}
+	
 	// 읽지 않은 알림 전체 + 읽은 알림 5건 조회
 	public List<AlarmVO> getAlarm(String userNo) {
 		int userNum = Integer.parseInt(userNo);

@@ -63,6 +63,33 @@ public class KyungYunTest {
 	@Autowired
 	AlarmRepository alaRepo;
 	
+	// 알림 배지 갯수
+	@Test
+	void getCountAlarm() {
+		String userNo = 2+"";
+		int userNum = Integer.parseInt(userNo);
+		
+		long rst1 = 0L;
+		for(int i = 0; i<100; i++) {
+			long start = System.nanoTime();
+			List<AlarmVO> unreadList = alaRepo.findUnreadAlarms(userNum, 0);
+			System.out.println(unreadList.size());
+			long end = System.nanoTime();
+			rst1 += end - start;
+		}
+		System.out.println(rst1/100);
+		
+		long rst2 = 0L;
+		for(int i = 0; i<100; i++) {
+			long start2 = System.nanoTime();
+			int count = alaRepo.findUnreadCnt(userNum, 0);
+			System.out.println(count);
+			long end2 = System.nanoTime();
+			rst2 += end2 - start2;
+		}
+		System.out.println(rst2/100);
+	}
+	
 	// 읽지 않은 알림 전체 + 읽은 알림 5건 조회
 //	@Test
 	void getAlarm() {

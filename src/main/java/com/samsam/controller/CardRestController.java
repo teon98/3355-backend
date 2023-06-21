@@ -22,6 +22,12 @@ public class CardRestController {
 
 	@Autowired
 	CardService cardService;
+	
+	// 알림 배지 갯수
+	@GetMapping("/alarm-count")
+	public int getCountAlarm(String userNo) {
+		return cardService.getCountAlarm(userNo);
+	}
 
 	// 읽지 않은 알림 전체 + 읽은 알림 5건 조회
 	@GetMapping("/alarm")
