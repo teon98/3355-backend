@@ -28,11 +28,16 @@ public class CommunityService {
 	UserRepository userRepo;
 	
 	//로그인한 User 정보 보여주기
-	public String UserPofile(int userNo) {
+	public HashMap<String, String> UserPofile(int userNo) {
+		HashMap<String, String> result = new HashMap<String, String>();
 		UserVO user = userRepo.findById(userNo).get();
 		ProfileVO profile = profileRepo.findByUser(user);
 		
-		return profile.getProfileImg();
+		result.put("nickname", user.getUserNickname());
+		result.put("profile", profile.getProfileImg());
+		
+		
+		return result;
 	}
 	
 	//커뮤니티 홈에서 내가 팔로우하는 사람들의 프로필 목록 보여주기

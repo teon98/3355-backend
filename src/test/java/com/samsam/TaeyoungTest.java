@@ -47,6 +47,30 @@ public class TaeyoungTest {
 	@Autowired
 	ProfileRepository profileRepo;
 	
+	@Test
+	void test13() {
+		//내가 팔로우 하는 사람들 + 내 게시물만 전체 조회하기
+		UserVO user = userRepo.findById(1).get();
+		
+		//내가 팔로우 하는 사람들 찾기
+		List<Integer> myFoloowerList = followRepo.findByFollowStart(user.getUserNo());
+		myFoloowerList.add(user.getUserNo());//[1,2,3]
+		
+		List<UserVO> myFoloowerUserList = new ArrayList<UserVO>();
+		
+		//사람들 번호로 User객체 만들어 저장
+		for(int f_num: myFoloowerList) {
+			UserVO f_user = userRepo.findById(f_num).get();
+			myFoloowerUserList.add(f_user);
+		}
+		
+		//postRepo
+		List<PostVO> followerPosts = postRepo.findByUserIn(myFoloowerUserList);
+		for(PostVO post: followerPosts) {
+			System.out.println(post.getPostNo());
+		}
+		
+	}
 	
 	//Test
 	void test12() {
@@ -253,7 +277,7 @@ public class TaeyoungTest {
 		});
 	}
 	
-	@Test
+	//@Test
 	void testTag() {
 		//tag 생성
 		TagVO tag = TagVO.builder()

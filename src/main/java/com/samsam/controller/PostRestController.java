@@ -23,6 +23,8 @@ public class PostRestController {
 	@Autowired
 	PostService postservice;
 	
+	
+	
 	@PostMapping(value="/newpost")
 	public ResponseEntity<?> uploadPost(
 			@RequestParam MultipartFile[] postImgs, 
