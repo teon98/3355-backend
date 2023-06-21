@@ -46,8 +46,66 @@ public class TaeyoungTest {
 	FollowRepository followRepo;
 	@Autowired
 	ProfileRepository profileRepo;
+	
+	
+	//Test
+	void test12() {
+		//posttag(mapping table) insert
+		
+		PostVO post = postRepo.findById(1).get();
+		TagVO tag = tagRepo.findById(1).get();
+		
+		PostTagVO posttag = PostTagVO.builder()
+									.post(post)
+									.tag(tag)
+									.build();
+		posttagRepo.save(posttag);
+	}
+	
+	//@Test
+	void test11() {
+		String[] tagList = new String[] {"test1", "test2", "test3", "test5"};
+		
+		
+		for(String tag: tagList) {
+			TagVO currentTag = tagRepo.findByTagContent(tag);
+			if(currentTag!=null) { //null이 아니면 존재
+				currentTag.setTagCount(currentTag.getTagCount() + 1); //tag 개수 증가
+			}else { //null이면 아예 없다는 뜻이니까
+				currentTag = TagVO.builder()
+						.tagContent(tag)
+						.tagCount(1)
+						.build();
+			}
+			tagRepo.save(currentTag);
+		}
+		
+	}
+	
+	//@Test
+	void test10() {
+		//post 등록 태그도 같이 등록된다.
+		//로그인한 사용자 찾기
+		UserVO user = userRepo.findById(1).get();
+		
+		//1.Post 테이블에 먼저 save
 
-	@Test
+		
+		//2.Tag 테이블에 그다음 save
+		TagVO tag = TagVO.builder()
+				.tagContent("#수영")
+				.tagCount(0)
+				.build();
+		tagRepo.save(tag);
+		//2-1. 기존에 있는 tag면 count가 plus
+		//3.PostTag 테이블에 save
+		
+		
+		
+		
+	}
+	
+	//@Test
 	void test9() {
 		//userNo로 profileDB에서 select해오기
 		UserVO user = userRepo.findById(1).get();
@@ -195,12 +253,12 @@ public class TaeyoungTest {
 		});
 	}
 	
-	//@Test
+	@Test
 	void testTag() {
 		//tag 생성
 		TagVO tag = TagVO.builder()
-				.tagContent("#수영")
-				.tagCount(0)
+				.tagContent("#오운완")
+				.tagCount(1)
 				.build();
 		tagRepo.save(tag);
 	}
