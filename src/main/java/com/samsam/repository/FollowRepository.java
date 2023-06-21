@@ -5,7 +5,6 @@ import java.util.List;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
-import com.samsam.vo.DailyStampVO;
 import com.samsam.vo.FollowId;
 import com.samsam.vo.FollowVO;
 import com.samsam.vo.UserVO;

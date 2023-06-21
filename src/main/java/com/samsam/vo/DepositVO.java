@@ -26,20 +26,20 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class DepositVO {
 	@Id
-	@SequenceGenerator(name="DEPOSITS_SEQUENCE_GENERATOR", sequenceName = "DEPOSITS_SEQUENCE", initialValue = 1, allocationSize = 1)
-	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator = "DEPOSITS_SEQUENCE_GENERATOR")
+	@SequenceGenerator(name = "DEPOSITS_SEQUENCE_GENERATOR", sequenceName = "DEPOSITS_SEQUENCE", initialValue = 1, allocationSize = 1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "DEPOSITS_SEQUENCE_GENERATOR")
 	private Integer depositNo;
-	
+
 	@Column(nullable = false)
 	private Integer depositCash;
-	
+
 	@Column(nullable = false)
 	private Integer depositHistory;
-	
+
 	@Column(nullable = false)
 	@CreationTimestamp
 	private Timestamp depositDate;
-	
+
 	@ManyToOne
 	private CardVO card;
 }

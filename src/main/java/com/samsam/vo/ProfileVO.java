@@ -14,6 +14,8 @@ import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -24,31 +26,31 @@ import lombok.ToString;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name="profiles")
+@Table(name = "profiles")
 @Entity
 @Getter
 @Setter
-@ToString(exclude ="user")
-public class ProfileVO implements Serializable{
+@ToString(exclude = "user")
+public class ProfileVO implements Serializable {
 	private static final long serialVersionUID = 1L;
-	
+
 	@Id
-	@SequenceGenerator(name="PROFILES_SEQUENCE_GENERATOR", sequenceName = "PROFILES_SEQUENCE", initialValue =100, allocationSize = 1)
-	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator = "PROFILES_SEQUENCE_GENERATOR")
+	@SequenceGenerator(name = "PROFILES_SEQUENCE_GENERATOR", sequenceName = "PROFILES_SEQUENCE", initialValue = 100, allocationSize = 1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "PROFILES_SEQUENCE_GENERATOR")
 //	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Integer profileId;
-	 
 
-	@Enumerated(EnumType.STRING)//열거형 타입중 문자만 저장
+	@Enumerated(EnumType.STRING) // 열거형 타입중 문자만 저장
 	@Builder.Default
-	private UserLevelRole profileLevel=UserLevelRole.BRONZE1;
-	@Column(length = 1000)  
+	private UserLevelRole profileLevel = UserLevelRole.BRONZE1;
+	@Column(length = 1000)
 	private String profileImg;
 	@Column(length = 450)
-	private String profileAbout;  
-	 
+	private String profileAbout;
+
 	@OneToOne
-	@JoinColumn(name="user_no")
-	UserVO user; 
-	 
+	@JoinColumn(name = "user_no")
+	@JsonIgnore
+	UserVO user;
+
 }

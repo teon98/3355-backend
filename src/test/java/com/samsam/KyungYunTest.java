@@ -2,12 +2,15 @@ package com.samsam;
 
 import java.util.List;
 import java.util.Random;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.samsam.repository.AlarmRepository;
 import com.samsam.repository.CardRepository;
 import com.samsam.repository.CardcustomRepository;
 import com.samsam.repository.DailyStampRepository;
@@ -19,6 +22,7 @@ import com.samsam.repository.StoreRepository;
 import com.samsam.repository.UserRepository;
 import com.samsam.repository.WithdrawRepository;
 import com.samsam.repository.WorkRepository;
+import com.samsam.vo.AlarmVO;
 import com.samsam.vo.CardVO;
 import com.samsam.vo.CardcustomVO;
 import com.samsam.vo.DepositVO;
@@ -56,7 +60,50 @@ public class KyungYunTest {
 	WithdrawRepository wdRepo;
 	@Autowired
 	CardcustomRepository cardcusRepo;
-
+	@Autowired
+	AlarmRepository alaRepo;
+	
+	// 알림 배지 갯수
+//	@Test
+	void getCountAlarm() {
+		String userNo = 2+"";
+		int userNum = Integer.parseInt(userNo);
+		
+		long rst1 = 0L;
+		for(int i = 0; i<100; i++) {
+			long start = System.nanoTime();
+			List<AlarmVO> unreadList = alaRepo.findUnreadAlarms(userNum, 0);
+			System.out.println(unreadList.size());
+			long end = System.nanoTime();
+			rst1 += end - start;
+		}
+		System.out.println(rst1/100);
+		
+		long rst2 = 0L;
+		for(int i = 0; i<100; i++) {
+			long start2 = System.nanoTime();
+			int count = alaRepo.findUnreadCnt(userNum, 0);
+			System.out.println(count);
+			long end2 = System.nanoTime();
+			rst2 += end2 - start2;
+		}
+		System.out.println(rst2/100);
+	}
+	
+	// 읽지 않은 알림 전체 + 읽은 알림 5건 조회
+//	@Test
+	void getAlarm() {
+		String userNo = 2+"";
+		int userNum = Integer.parseInt(userNo);
+		List<AlarmVO> unreadList = alaRepo.findUnreadAlarms(userNum, 0);
+		List<AlarmVO> readList = alaRepo.findReadAlarms(userNum, 1);
+		
+		List<AlarmVO> resultList = Stream.concat(unreadList.stream(), readList.stream()).collect(Collectors.toList());
+		for (AlarmVO alarm : resultList) {
+			System.out.println(alarm);
+		}
+	}
+	
 	// 결제 정보 불러오기 (결제 완료 후, 영수증처럼 보려고)
 //	@Test
 	@Transactional
@@ -107,7 +154,7 @@ public class KyungYunTest {
 	}
 
 	// 회원 탈퇴(Delete)
-	@Test
+//	@Test
 	void deleteUser() {
 		userRepo.deleteById(107);
 	}
@@ -193,9 +240,9 @@ public class KyungYunTest {
 	// 포인트 지급: 포인트 잔액에 추가되고 포인트 테이블 내역에 추가
 //	@Test
 	void insertPoint() {
-		int income = 3000;
+		int income = 5000;
 
-		UserVO user = userRepo.findById(110).get();
+		UserVO user = userRepo.findById(3).get();
 		CardVO card = cardRepo.findByUser(user);
 
 		int current = card.getPointBalance();
@@ -203,7 +250,7 @@ public class KyungYunTest {
 		CardVO savedCard = cardRepo.save(card);
 
 		PointVO point = PointVO.builder().pointSave(income).pointHistory(savedCard.getPointBalance())
-				.pointMemo("23/06/12 출석체크").card(savedCard).build();
+				.pointMemo("이벤트").card(savedCard).build();
 		pointRepo.save(point);
 	}
 

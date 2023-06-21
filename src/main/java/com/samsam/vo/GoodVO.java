@@ -18,22 +18,21 @@ import lombok.ToString;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name="goods")
+@Table(name = "goods")
 @Entity
 @ToString
 @Data
 public class GoodVO {
-	private static final long serialVersionUID = 1L;
 	@Id
-	@SequenceGenerator(name="GOOD_SEQUENCE_GENERATOR", sequenceName = "GOOD_SEQUENCE", initialValue = 1, allocationSize = 1)
-	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator = "GOOD_SEQUENCE_GENERATOR")
+	@SequenceGenerator(name = "GOOD_SEQUENCE_GENERATOR", sequenceName = "GOOD_SEQUENCE", initialValue = 1, allocationSize = 1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "GOOD_SEQUENCE_GENERATOR")
 	private Integer good_no;
-	
+
 	@ManyToOne
-	@JoinColumn(name="user_no")
+	@JoinColumn(name = "user_no")
 	private UserVO user;
-	
+
 	@ManyToOne
-	@JoinColumn(name="post_no")
+	@JoinColumn(name = "post_no")
 	private PostVO post;
 }

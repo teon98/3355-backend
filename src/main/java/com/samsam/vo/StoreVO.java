@@ -17,10 +17,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class StoreVO {
-	
+
 	@Id
 	private Integer storeNo;
-	
+
 	@Column(nullable = false)
 	private String storeName;
 

@@ -21,20 +21,20 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CardcustomVO {
-	
+
 	@Id
-	@SequenceGenerator(name="CARDCUSTOMS_SEQUENCE_GENERATOR", sequenceName = "CARDCUSTOMS_SEQUENCE", initialValue = 1, allocationSize = 1)
-	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator = "CARDCUSTOMS_SEQUENCE_GENERATOR")
+	@SequenceGenerator(name = "CARDCUSTOMS_SEQUENCE_GENERATOR", sequenceName = "CARDCUSTOMS_SEQUENCE", initialValue = 1, allocationSize = 1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "CARDCUSTOMS_SEQUENCE_GENERATOR")
 	private Integer customNo;
-	
+
 	@Column(nullable = false)
 	@Builder.Default
 	private String customColor = "gray";
-	
+
 	@Column(nullable = true, length = 30)
 	@Builder.Default
 	private String customLettering = "";
-	
+
 	@ManyToOne
 	private CardVO card;
 
