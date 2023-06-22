@@ -50,6 +50,49 @@ public class CardService {
 	DepositRepository dpRepo;
 	@Autowired
 	AlarmRepository alaRepo;
+	
+	// 카드번호와 사용자 별명 가져오기
+	public HashMap<String, String> getCardCodeNick(String userNo){
+		int userNum = Integer.parseInt(userNo);
+		UserVO user = userRepo.findById(userNum).get();
+		CardVO card = cardRepo.findByUser(user);
+		
+		HashMap<String, String> map = new HashMap<>();
+		
+		String userNick = user.getUserNickname();
+		String cardCode = card.getCardCode();
+		
+		map.put("userNick", userNick);
+		map.put("cardCode", cardCode);
+		
+		return map;
+	}
+	
+	// 알림 단건 읽음 처리
+	public String singleReadAlarm(String alarmNo) {
+		int alarmNum = Integer.parseInt(alarmNo);
+		AlarmVO alarm = alaRepo.findById(alarmNum).orElse(null);
+		
+		if(alarm != null) {
+			alarm.setAlarmStatus(true);
+		}
+		alaRepo.save(alarm);
+		
+		return "OK";
+	}
+	
+	// 알림 전체 읽음 처리
+	public String allReadAlarm(String userNo){
+		int userNum = Integer.parseInt(userNo);
+		List<AlarmVO> unreadList = alaRepo.findUnreadAlarms(userNum, 0);
+		
+		for(AlarmVO al : unreadList) {
+			al.setAlarmStatus(true);
+		}
+		alaRepo.saveAll(unreadList);
+		
+		return "OK";
+	}
 
 	// 알림 배지 갯수
 	public int getCountAlarm(String userNo) {
