@@ -140,7 +140,7 @@ public class TaekjooTest {
 		CardVO card = cardRepo.findByUser(user);
 		
 		CardcustomVO cardCus = CardcustomVO.builder()
-				.card(card)
+//				.card(card)
 				.build();
 		
 		cardcusRepo.save(cardCus);
