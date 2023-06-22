@@ -63,6 +63,23 @@ public class KyungYunTest {
 	@Autowired
 	AlarmRepository alaRepo;
 	
+	// 결제 상세 내역에서 단 건 상세 보기 (영수증)
+	@Test
+	void show() {
+		String date = "23/06/21 14:06:09";
+		String userNo = "2";
+		int userNum = Integer.parseInt(userNo);
+		System.out.println(userNum);
+		
+		UserVO user = userRepo.findById(userNum).orElse(null);
+		CardVO card = cardRepo.findByUser(user);
+		WithdrawVO withdraw = wdRepo.findByDate(date, card.getCardSeq());
+		
+		System.out.println(withdraw.getWithdrawCash());
+		System.out.println(withdraw.getWithdrawPoint());
+		System.out.println(withdraw.getWithdrawDate());
+	}
+	
 	// 알림 배지 갯수
 //	@Test
 	void getCountAlarm() {
@@ -175,7 +192,10 @@ public class KyungYunTest {
 	void pay() {
 		// 결제 시, 포인트 사용할 수 있음.
 		// 결제 시, 등급별로 차등 적립률 적용하여 포인트 적립
-		UserVO user = userRepo.findById(4).get();
+		String userNo = "2";
+		int userNum = Integer.parseInt(userNo);
+		
+		UserVO user = userRepo.findById(userNum).get();
 		ProfileVO profile = profRepo.findByUser(user);
 
 		String level = profile.getProfileLevel().toString();
@@ -198,8 +218,8 @@ public class KyungYunTest {
 		CardVO card = cardRepo.findByUser(user);
 		StoreVO store = storeRepo.findById(88883001).get();
 
-		int amount = 5000;
-		int pointspend = 50;
+		int amount = 2000;
+		int pointspend = 100;
 		int spend = amount - pointspend;
 
 		int current = card.getAccountBalance();

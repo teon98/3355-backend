@@ -24,6 +24,11 @@ public class CardRestController {
 	@Autowired
 	CardService cardService;
 
+	// 결제 상세 내역에서 단 건 상세 보기 (영수증)
+	@GetMapping("/history/detail")
+	public HashMap<String, String> selectWithdrawDetail(String userNo, String date) {
+		return cardService.selectWithdrawDetail(userNo, date);
+
 	// 카드번호와 사용자 별명 가져오기
 	@GetMapping("/cardCodeNick")
 	public HashMap<String, String> getCardCodeNick(String userNo) {

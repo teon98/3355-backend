@@ -29,6 +29,9 @@ public class PointVO {
 	@SequenceGenerator(name = "POINTS_SEQUENCE_GENERATOR", sequenceName = "POINTS_SEQUENCE", initialValue = 1, allocationSize = 1)
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "POINTS_SEQUENCE_GENERATOR")
 	private Integer pointNo;
+	
+	@Column(nullable = true)
+	private Integer withdrawNo;
 
 	@Column(nullable = false)
 	private Integer pointSave;
