@@ -14,6 +14,10 @@ public interface WorkRepository extends CrudRepository<WorkVO, Integer> {
 
 //	public List<WorkVO> findByWorkDateContaining(String formattedDate);
 	// JPQL(JPL Query Language)...*지원 안됨
-	@Query(value = "select * from works w where w.work_date like %?1%", nativeQuery = true)
-	public List<WorkVO> findByWorkDateContaining(String workDate);
+	@Query(value = "select * from works w where w.work_date like %?1% and user_no = ?2", nativeQuery = true)
+	public List<WorkVO> findByWorkDateContaining(String workDate,int userNo);
+	
+	@Query(value = "select count(*) from works w where w.work_date like %?1% and user_no = ?2", nativeQuery = true)
+	public int findByWorkDateContaining2(String workDate,int userNo);
+	
 }

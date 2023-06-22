@@ -16,9 +16,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.samsam.repository.CardRepository;
+import com.samsam.repository.CardcustomRepository;
 import com.samsam.repository.ProfileRepository;
 import com.samsam.repository.UserRepository;
 import com.samsam.vo.CardVO;
+import com.samsam.vo.CardcustomVO;
 import com.samsam.vo.ProfileVO;
 import com.samsam.vo.UserVO;
 
@@ -34,7 +36,8 @@ public class UserRestConttoller {
 	CardRepository cardRepo;
 	@Autowired
 	JavaMailSender javaMailSender;
-
+	@Autowired
+	CardcustomRepository customRepo;
 	
 	
 	// 이메일 중복체크
@@ -121,6 +124,13 @@ public class UserRestConttoller {
 		return newuser.getUserEmail();
 	}
 
+	//유저 이메일 가져오기
+	@GetMapping("/getNickname.sam")
+	public String getEmail(@RequestParam int userNo) {
+		UserVO user = userRepo.findById(userNo).get();
+		return user.getUserNickname(); 
+	}
+	
 	// 카드 생성
 	@PostMapping(value = "/insertCard.sam", consumes = "application/json")
 	public String CardRegisterPost(@RequestBody CardVO card, @RequestParam Integer userNo) {
@@ -139,7 +149,10 @@ public class UserRestConttoller {
 		savedCard.setCardCode(rst);
 		savedCard.setUser(user);
 		cardRepo.save(savedCard);
-
+		
+		CardcustomVO custom = CardcustomVO.builder().user(user).build();
+		customRepo.save(custom);
+		
 		return "성공^^";
 	}
 
