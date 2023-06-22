@@ -12,6 +12,7 @@ public interface PointRepository extends CrudRepository<PointVO, Integer> {
 
 	public PointVO findByCard(CardVO card);
 	public List<PointVO> findByCardOrderByPointDateDesc(CardVO card);
+	public PointVO findByWithdrawNo(Integer withdrawNo);
 	
 	@Query(value = "select * from points "
 			+ "where TO_CHAR(point_date, 'YY/MM/DD HH24:MI') = ?1 "

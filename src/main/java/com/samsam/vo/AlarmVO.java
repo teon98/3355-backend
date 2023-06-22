@@ -1,7 +1,5 @@
 package com.samsam.vo;
 
-import java.sql.Timestamp;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -12,7 +10,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
-import org.hibernate.annotations.CreationTimestamp;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -41,16 +39,16 @@ public class AlarmVO {
 	@Column(nullable = false)
 	private String alarmMsg;
 
-	@CreationTimestamp
-	private Timestamp alarmDate;
+	@Column(nullable = false)
+	private String alarmDate;
 	@Column(nullable = false)
 	@Builder.Default
 	private Boolean alarmStatus = false;
 
 	// 연관관계 설정n:1
-	// FK: 칼람이 board_bnofh 로 생성된다
 	@ManyToOne
 	@JoinColumn(name = "user_no")
+	@JsonIgnore
 	UserVO user;
 
 }
