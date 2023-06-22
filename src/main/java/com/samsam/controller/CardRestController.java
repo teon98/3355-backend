@@ -22,7 +22,13 @@ public class CardRestController {
 
 	@Autowired
 	CardService cardService;
-	
+
+	// 결제 상세 내역에서 단 건 상세 보기 (영수증)
+	@GetMapping("/history/detail")
+	public HashMap<String, String> selectWithdrawDetail(String userNo, String date) {
+		return cardService.selectWithdrawDetail(userNo, date);
+	}
+
 	// 알림 배지 갯수
 	@GetMapping("/alarm-count")
 	public int getCountAlarm(String userNo) {
@@ -34,7 +40,7 @@ public class CardRestController {
 	public List<AlarmVO> getAlarm(String userNo) {
 		return cardService.getAlarm(userNo);
 	}
-	
+
 	// 카드 잔액 충전
 	@PostMapping("/charge")
 	public String chargeBalance(@RequestBody HashMap<String, String> map) {
