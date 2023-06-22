@@ -28,7 +28,6 @@ import lombok.ToString;
 @AllArgsConstructor
 @Table(name = "users")
 @Entity
-@ToString
 @Getter
 @Setter
 public class UserVO implements Serializable {

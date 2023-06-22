@@ -7,6 +7,7 @@ import java.util.Calendar;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -35,9 +36,28 @@ public class MyPageRestController {
 	@Autowired
 	CardcustomRepository cusRepo;
 	
+	//커스텀 카드 입력
+	@PostMapping(value="/postcustom.sam")
+	public String postCustom(@RequestParam int userNo, @RequestParam String customColor1,@RequestParam String customColor2, @RequestParam String customLettering) {
+		String msg = "";
+		CardcustomVO card = cusRepo.findByUserNo(userNo);
+		card.setCustomColor1(customColor1);
+		card.setCustomColor2(customColor2);
+		card.setCustomLettering(customLettering);
+		
+		CardcustomVO card2 =cusRepo.save(card);
+		if(card2.getCustomColor1().equals(card.getCustomColor1())) {
+			msg="성공";
+		}else {
+			msg="실패";
+		}
+		
+		return msg;
+	}
+	
 	//커스텀 정보
 	@GetMapping(value="/getcustom.sam")
-	public CardcustomVO getCustom(int userNo) {
+	public CardcustomVO getCustom(@RequestParam int userNo) {
 		CardcustomVO card = cusRepo.findByUserNo(userNo);
 		System.out.println(card);
 		return card;
@@ -82,6 +102,7 @@ public class MyPageRestController {
         
 		return wcount;
 	}
+	
 	
 	
 
