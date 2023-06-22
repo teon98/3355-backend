@@ -16,6 +16,7 @@ import com.samsam.repository.AlarmRepository;
 import com.samsam.repository.CardRepository;
 import com.samsam.repository.DepositRepository;
 import com.samsam.repository.PointRepository;
+import com.samsam.repository.PostRepository;
 import com.samsam.repository.ProfileRepository;
 import com.samsam.repository.StoreRepository;
 import com.samsam.repository.UserRepository;
@@ -50,7 +51,7 @@ public class CardService {
 	DepositRepository dpRepo;
 	@Autowired
 	AlarmRepository alaRepo;
-	
+
 	// 카드번호와 사용자 별명 가져오기
 	public HashMap<String, String> getCardCodeNick(String userNo){
 		int userNum = Integer.parseInt(userNo);
