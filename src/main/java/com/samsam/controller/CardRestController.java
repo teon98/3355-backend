@@ -28,7 +28,8 @@ public class CardRestController {
 	@GetMapping("/history/detail")
 	public HashMap<String, String> selectWithdrawDetail(String userNo, String date) {
 		return cardService.selectWithdrawDetail(userNo, date);
-
+	}
+	
 	// 카드번호와 사용자 별명 가져오기
 	@GetMapping("/cardCodeNick")
 	public HashMap<String, String> getCardCodeNick(String userNo) {
