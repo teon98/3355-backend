@@ -51,18 +51,94 @@ public class CardService {
 	@Autowired
 	AlarmRepository alaRepo;
 	
-	// 알림 배지 갯수
-	public int getCountAlarm(String userNo) {
+	// 카드번호와 사용자 별명 가져오기
+	public HashMap<String, String> getCardCodeNick(String userNo){
 		int userNum = Integer.parseInt(userNo);
-		return alaRepo.findUnreadCnt(userNum, 0);
+		UserVO user = userRepo.findById(userNum).get();
+		CardVO card = cardRepo.findByUser(user);
+		
+		HashMap<String, String> map = new HashMap<>();
+		
+		String userNick = user.getUserNickname();
+		String cardCode = card.getCardCode();
+		
+		map.put("userNick", userNick);
+		map.put("cardCode", cardCode);
+		
+		return map;
 	}
 	
+	// 알림 단건 읽음 처리
+	public String singleReadAlarm(String alarmNo) {
+		int alarmNum = Integer.parseInt(alarmNo);
+		AlarmVO alarm = alaRepo.findById(alarmNum).orElse(null);
+		
+		if(alarm != null) {
+			alarm.setAlarmStatus(true);
+		}
+		alaRepo.save(alarm);
+		
+		return "OK";
+	}
+	
+	// 알림 전체 읽음 처리
+	public String allReadAlarm(String userNo){
+		int userNum = Integer.parseInt(userNo);
+		List<AlarmVO> unreadList = alaRepo.findUnreadAlarms(userNum, 0);
+		
+		for(AlarmVO al : unreadList) {
+			al.setAlarmStatus(true);
+		}
+		alaRepo.saveAll(unreadList);
+		
+		return "OK";
+	}
+
+	// 결제 상세 내역에서 단 건 상세 보기 (영수증)
+	public HashMap<String, String> selectWithdrawDetail(String userNo, String date) {
+		HashMap<String, String> map = new HashMap<>();
+		if(date == null) {
+			map.put("msg", "date null");
+		}
+		UserVO user = userRepo.findById(Integer.parseInt(userNo)).get();
+		CardVO card = cardRepo.findByUser(user);
+
+		WithdrawVO wd = wdRepo.findByDate(date.substring(0, 14), card.getCardSeq());
+		if(wd == null) {
+			map.put("msg", "date null");
+		}
+		int spendMoney = wd.getWithdrawCash();
+		int spendPoint = wd.getWithdrawPoint();
+
+		PointVO point = pointRepo.findByDate(date, card.getCardSeq());
+		if(point == null) {
+			map.put("msg", "date null");
+		}
+		double ratio = Math.round((double) point.getPointSave() / (double) spendMoney * 100) / 100.0;
+
+		map.put("storeName", wd.getStore().getStoreName());
+		map.put("withdrawDate", wd.getWithdrawDate().toString());
+		map.put("amount", (spendMoney + spendPoint) + "");
+		map.put("withdrawCash", spendMoney + "");
+		map.put("point", spendPoint + "");
+		map.put("pointSave", point.getPointSave() + "");
+		map.put("levelRatio", ratio + "");
+
+		System.out.println(map);
+		return map;
+	}
+
+	// 알림 배지 갯수
+	public int getCountAlarm(String userNo) {
+		return alaRepo.findUnreadCnt(Integer.parseInt(userNo), 0);
+	}
+
 	// 읽지 않은 알림 전체 + 읽은 알림 5건 조회
 	public List<AlarmVO> getAlarm(String userNo) {
 		int userNum = Integer.parseInt(userNo);
 		List<AlarmVO> unreadList = alaRepo.findUnreadAlarms(userNum, 0);
 		List<AlarmVO> readList = alaRepo.findReadAlarms(userNum, 1);
-		
+
 		List<AlarmVO> resultList = Stream.concat(unreadList.stream(), readList.stream()).collect(Collectors.toList());
 		return resultList;
 	}
@@ -163,23 +239,23 @@ public class CardService {
 		return "OK";
 	}
 
-	// 결제 정보 불러오기 (결제 완료 후, 영수증처럼 보려고)
+	// 결제 정보 불러오기 (결제 완료 후, 영수증)
 	public HashMap<String, String> selectWithdraws(String userNo) {
 		HashMap<String, String> map = new HashMap<>();
 
 		int num = Integer.parseInt(userNo);
 		UserVO user = userRepo.findById(num).get();
 		CardVO card = cardRepo.findByUser(user);
-		
+
 		List<WithdrawVO> wdList = wdRepo.findByCardOrderByWithdrawDateDesc(card);
 		WithdrawVO wd = wdList.get(0);
 		int spendMoney = wd.getWithdrawCash();
 		int spendPoint = wd.getWithdrawPoint();
-		
+
 		List<PointVO> poList = pointRepo.findByCardOrderByPointDateDesc(card);
 		PointVO point = poList.get(0);
-		double ratio =  Math.round((double)point.getPointSave() / (double)spendMoney * 100) / 100.0;
-		
+		double ratio = Math.round((double) point.getPointSave() / (double) spendMoney * 100) / 100.0;
+
 		map.put("storeName", wd.getStore().getStoreName());
 		map.put("withdrawDate", wd.getWithdrawDate().toString());
 		map.put("amount", (spendMoney + spendPoint) + "");
@@ -247,24 +323,42 @@ public class CardService {
 		card.setAccountBalance(current - spend);
 		card.setPointBalance(currentPoint - pointspend);
 		CardVO savedCard = cardRepo.save(card);
-
+		
+		// 포인트 사용
 		if (pointspend != 0) {
-			PointVO pointMinus = PointVO.builder().pointSave(pointspend * -1).pointMemo(store.getStoreName() + " 결제")
-					.pointHistory(savedCard.getPointBalance()).card(savedCard).build();
+			PointVO pointMinus = PointVO.builder()
+					.pointSave(pointspend * -1)
+					.pointMemo(store.getStoreName() + " 결제")
+					.pointHistory(savedCard.getPointBalance())
+					.card(savedCard)
+					.build();
 			pointRepo.save(pointMinus);
 		}
-
-		WithdrawVO withdraw = WithdrawVO.builder().withdrawCash(spend).withdrawPoint(pointspend)
-				.withdrawHistory(savedCard.getAccountBalance()).card(savedCard).store(store).build();
+		
+		// 결제
+		WithdrawVO withdraw = WithdrawVO.builder()
+				.withdrawCash(spend)
+				.withdrawPoint(pointspend)
+				.withdrawHistory(savedCard.getAccountBalance())
+				.card(savedCard)
+				.store(store)
+				.build();
 		wdRepo.save(withdraw);
-
+		
+		List<WithdrawVO> wdList = wdRepo.findByCardOrderByWithdrawDateDesc(savedCard);
+		
+		// 결제 후 포인트 적립
 		if (spend != 0) {
 			card = cardRepo.findByUser(user);
 			card.setPointBalance(card.getPointBalance() + (int) (spend * ratio));
 			CardVO savedCard2 = cardRepo.save(card);
 
-			PointVO pointPlus = PointVO.builder().pointSave((int) (spend * ratio))
-					.pointMemo(store.getStoreName() + " 적립").pointHistory(savedCard2.getPointBalance()).card(savedCard2)
+			PointVO pointPlus = PointVO.builder()
+					.pointSave((int) (spend * ratio))
+					.pointMemo(store.getStoreName() + " 적립")
+					.pointHistory(savedCard2.getPointBalance())
+					.card(savedCard2)
+					.withdrawNo(wdList.get(0).getWithdrawNo())
 					.build();
 			pointRepo.save(pointPlus);
 		}
@@ -286,7 +380,6 @@ public class CardService {
 			storeName = store.getStoreName();
 
 		return storeName;
-
 	}
 
 }

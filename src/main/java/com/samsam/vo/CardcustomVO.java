@@ -5,6 +5,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
@@ -13,6 +14,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Entity
 @Table(name = "cardcustoms")
@@ -20,6 +22,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
 public class CardcustomVO {
 
 	@Id
@@ -29,13 +32,20 @@ public class CardcustomVO {
 
 	@Column(nullable = false)
 	@Builder.Default
-	private String customColor = "gray";
+	private String customColor1 = "gray";
+	
+	@Column(nullable = false)
+	@Builder.Default
+	private String customColor2 = "gray";
 
 	@Column(nullable = true, length = 30)
 	@Builder.Default
 	private String customLettering = "";
 
 	@ManyToOne
-	private CardVO card;
+	@JoinColumn(name = "user_no")
+	UserVO user;
+
+
 
 }

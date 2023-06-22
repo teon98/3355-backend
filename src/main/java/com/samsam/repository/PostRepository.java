@@ -10,4 +10,5 @@ import com.samsam.vo.UserVO;
 public interface PostRepository extends CrudRepository<PostVO, Integer> {
 	
 	public List<PostVO> findByUser(UserVO user);
+	public List<PostVO> findByUserIn(List<UserVO> users);
 }

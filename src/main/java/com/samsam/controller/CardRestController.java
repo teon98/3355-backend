@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -29,12 +30,41 @@ public class CardRestController {
 		return cardService.getCountAlarm(userNo);
 	}
 
+	// 결제 상세 내역에서 단 건 상세 보기 (영수증)
+	@GetMapping("/history/detail")
+	public HashMap<String, String> selectWithdrawDetail(String userNo, String date) {
+		return cardService.selectWithdrawDetail(userNo, date);
+
+	// 카드번호와 사용자 별명 가져오기
+	@GetMapping("/cardCodeNick")
+	public HashMap<String, String> getCardCodeNick(String userNo) {
+		return cardService.getCardCodeNick(userNo);
+	}
+
+	// 알림 단건 읽음 처리
+	@PutMapping("/readSingle")
+	public String singleReadAlarm(String alarmNo) {
+		return cardService.singleReadAlarm(alarmNo);
+	}
+
+	// 알림 전체 읽음 처리
+	@PutMapping("/readAll")
+	public String allReadAlarm(String userNo) {
+		return cardService.allReadAlarm(userNo);
+	}
+
+	// 알림 배지 갯수
+	@GetMapping("/alarm-count")
+	public int getCountAlarm(String userNo) {
+		return cardService.getCountAlarm(userNo);
+	}
+
 	// 읽지 않은 알림 전체 + 읽은 알림 5건 조회
 	@GetMapping("/alarm")
 	public List<AlarmVO> getAlarm(String userNo) {
 		return cardService.getAlarm(userNo);
 	}
-	
+
 	// 카드 잔액 충전
 	@PostMapping("/charge")
 	public String chargeBalance(@RequestBody HashMap<String, String> map) {

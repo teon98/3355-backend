@@ -17,12 +17,14 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 
 import com.samsam.repository.AlarmRepository;
+import com.samsam.repository.CardcustomRepository;
 import com.samsam.repository.DailyStampRepository;
 import com.samsam.repository.FollowRepository;
 import com.samsam.repository.ProfileRepository;
 import com.samsam.repository.UserRepository;
 import com.samsam.repository.WorkRepository;
 import com.samsam.vo.AlarmVO;
+import com.samsam.vo.CardcustomVO;
 import com.samsam.vo.DailyStampVO;
 import com.samsam.vo.FollowId;
 import com.samsam.vo.FollowVO;
@@ -45,13 +47,22 @@ public class JimanTest {
 	FollowRepository frepo;
 	@Autowired
 	AlarmRepository arepo;
+	
+	
 	@Autowired
 	JavaMailSender javaMailSender;
 	
 	int wcount=0;
 	
 	
-	@Test//오늘날짜 찍어보기
+	@Test//카드커스텀생성
+	void test14() {
+		UserVO user = urepo.findById(12).get();
+		CardcustomVO card = CardcustomVO.builder().user(user).customColor1("red").build();
+		
+	}
+	
+	//@Test//오늘날짜 찍어보기
 	void test13() {
 		int levelup=0;
 		Timestamp timestamp = new Timestamp(System.currentTimeMillis());
@@ -60,10 +71,7 @@ public class JimanTest {
 	     //오늘 날짜 뽑기
 	     SimpleDateFormat dayFormat = new SimpleDateFormat("dd");
 	     String day =  dayFormat.format(timestamp);
-	    		 //
-	     
-	
-		
+	    	
 	     
 	     //오늘 날짜가 1일이면
 	     if(day.equals("01")) {
@@ -80,7 +88,7 @@ public class JimanTest {
 	          
 		 
 		     //지난 달에 운동한 날짜
-		     wrepo.findByWorkDateContaining(lastMonth).forEach(w->{
+		     wrepo.findByWorkDateContaining(lastMonth,1).forEach(w->{
 		    	 wcount++;
 		     });
 		     
@@ -312,7 +320,7 @@ public class JimanTest {
 
 		      String date = dateFormat.format(timestamp);
 		      System.out.println(date);
-		     wrepo.findByWorkDateContaining(date).forEach(w->{
+		     wrepo.findByWorkDateContaining(date, 12).forEach(w->{
 		    	 wcount++;
 		     });
 		     System.out.println("6월동안 운동한 날짜: "+wcount);
@@ -438,12 +446,11 @@ public class JimanTest {
 	
 	//@Test//오운완 입력
 	void test4() {
-		
 		IntStream.rangeClosed(1, 5).forEach(i->{
 			WorkVO w = WorkVO.builder().build();
 			WorkVO w2 = wrepo.save(w);
 			
-			UserVO user = urepo.findById(1).get();
+			UserVO user = urepo.findById(12).get();
 			w2.setUser(user);
 			wrepo.save(w2);
 		});

@@ -26,7 +26,7 @@ public class CommunityRestController {
 	}
 	
 	@GetMapping(value = "userProfile")
-	public String UserPofile(int userNo) {
+	public HashMap<String, String> UserPofile(int userNo) {
 		return communityService.UserPofile(userNo);
 	}
 	
