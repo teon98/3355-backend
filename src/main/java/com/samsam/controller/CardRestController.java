@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -27,6 +28,23 @@ public class CardRestController {
 	@GetMapping("/history/detail")
 	public HashMap<String, String> selectWithdrawDetail(String userNo, String date) {
 		return cardService.selectWithdrawDetail(userNo, date);
+
+	// 카드번호와 사용자 별명 가져오기
+	@GetMapping("/cardCodeNick")
+	public HashMap<String, String> getCardCodeNick(String userNo) {
+		return cardService.getCardCodeNick(userNo);
+	}
+
+	// 알림 단건 읽음 처리
+	@PutMapping("/readSingle")
+	public String singleReadAlarm(String alarmNo) {
+		return cardService.singleReadAlarm(alarmNo);
+	}
+
+	// 알림 전체 읽음 처리
+	@PutMapping("/readAll")
+	public String allReadAlarm(String userNo) {
+		return cardService.allReadAlarm(userNo);
 	}
 
 	// 알림 배지 갯수

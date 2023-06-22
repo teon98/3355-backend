@@ -2,12 +2,14 @@ package com.samsam;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import com.samsam.repository.AlarmRepository;
 import com.samsam.repository.CardRepository;
 import com.samsam.repository.CardcustomRepository;
 import com.samsam.repository.DepositRepository;
@@ -16,6 +18,7 @@ import com.samsam.repository.ProfileRepository;
 import com.samsam.repository.StoreRepository;
 import com.samsam.repository.UserRepository;
 import com.samsam.repository.WithdrawRepository;
+import com.samsam.vo.AlarmVO;
 import com.samsam.vo.CardVO;
 import com.samsam.vo.CardcustomVO;
 import com.samsam.vo.DepositVO;
@@ -44,6 +47,8 @@ public class TaekjooTest {
 	CardcustomRepository cardcusRepo;
 	@Autowired
 	ProfileRepository profRepo;
+	@Autowired
+	AlarmRepository alaRepo;
 	
 	// @Test
 	void test1() {
@@ -89,7 +94,6 @@ public class TaekjooTest {
 				.store(store)
 				.build();
 		wdRepo.save(with);
-		
 	}
 	
 	// @Test
@@ -140,7 +144,7 @@ public class TaekjooTest {
 		CardVO card = cardRepo.findByUser(user);
 		
 		CardcustomVO cardCus = CardcustomVO.builder()
-				.card(card)
+//				.card(card)
 				.build();
 		
 		cardcusRepo.save(cardCus);
@@ -256,7 +260,7 @@ public class TaekjooTest {
 	    }
 	}
 	
-	@Test
+	//@Test
 	void test9() {
 		UserVO user = userRepo.findById(110).get();
 		CardVO card = cardRepo.findByUser(user);
@@ -275,6 +279,46 @@ public class TaekjooTest {
 			System.out.println(ptMemo);
 			System.out.println(ptDate);
 		}
+	}
+	
+	//@Test
+	void test10() {
+		int userNum = 3;
+		List<AlarmVO> unreadList = alaRepo.findUnreadAlarms(userNum, 0);
+		
+		for(AlarmVO al : unreadList) {
+			al.setAlarmStatus(true);
+		}
+		alaRepo.saveAll(unreadList);
+	}
+	
+	//@Test
+	void test11() {
+		int id = 1031;
+		AlarmVO alarm = alaRepo.findById(id).orElse(null);
+		
+		if(alarm != null) {
+			alarm.setAlarmStatus(true);
+		}
+		
+		alaRepo.save(alarm);	
+	}
+	
+	@Test
+	void test12() {
+		int userNum = 3;
+		UserVO user = userRepo.findById(userNum).get();
+		CardVO card = cardRepo.findByUser(user);
+		
+		HashMap<String, String> map = new HashMap<>();
+		
+		String userNick = user.getUserNickname();
+		String cardCode = card.getCardCode();
+		
+		map.put("userNick", userNick);
+		map.put("cardCode", cardCode);
+		
+		System.out.println(map);
 	}
 
 }

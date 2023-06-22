@@ -182,9 +182,9 @@ public class KyungYunTest {
 		UserVO user = userRepo.findById(4).get();
 		CardVO card = cardRepo.findByUser(user);
 
-		CardcustomVO cardCus = CardcustomVO.builder().card(card).customColor("orange").customLettering("우하하").build();
+//		CardcustomVO cardCus = CardcustomVO.builder().card(card).customColor("orange").customLettering("우하하").build();
 
-		cardcusRepo.save(cardCus);
+//		cardcusRepo.save(cardCus);
 	}
 
 	// 결제
