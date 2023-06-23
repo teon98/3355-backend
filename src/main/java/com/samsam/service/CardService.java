@@ -16,6 +16,7 @@ import com.samsam.repository.AlarmRepository;
 import com.samsam.repository.CardRepository;
 import com.samsam.repository.DepositRepository;
 import com.samsam.repository.PointRepository;
+import com.samsam.repository.PostRepository;
 import com.samsam.repository.ProfileRepository;
 import com.samsam.repository.StoreRepository;
 import com.samsam.repository.UserRepository;
@@ -50,7 +51,7 @@ public class CardService {
 	DepositRepository dpRepo;
 	@Autowired
 	AlarmRepository alaRepo;
-	
+
 	// 카드번호와 사용자 별명 가져오기
 	public HashMap<String, String> getCardCodeNick(String userNo){
 		int userNum = Integer.parseInt(userNo);
@@ -95,34 +96,22 @@ public class CardService {
 	}
 
 	// 결제 상세 내역에서 단 건 상세 보기 (영수증)
-	public HashMap<String, String> selectWithdrawDetail(String userNo, String date) {
+	public HashMap<String, String> selectWithdrawDetail(String withdrawNo) {
 		HashMap<String, String> map = new HashMap<>();
-		if(date == null) {
-			map.put("msg", "date null");
-		}
-		UserVO user = userRepo.findById(Integer.parseInt(userNo)).get();
-		CardVO card = cardRepo.findByUser(user);
-
-		WithdrawVO wd = wdRepo.findByDate(date.substring(0, 14), card.getCardSeq());
-		if(wd == null) {
-			map.put("msg", "date null");
-		}
+		
+		WithdrawVO wd = wdRepo.findById(Integer.parseInt(withdrawNo)).get();
+		PointVO point = pointRepo.findByWithdrawNo(Integer.parseInt(withdrawNo));
+		
 		int spendMoney = wd.getWithdrawCash();
 		int spendPoint = wd.getWithdrawPoint();
-
-		PointVO point = pointRepo.findByDate(date, card.getCardSeq());
-		if(point == null) {
-			map.put("msg", "date null");
-		}
-		double ratio = Math.round((double) point.getPointSave() / (double) spendMoney * 100) / 100.0;
 
 		map.put("storeName", wd.getStore().getStoreName());
 		map.put("withdrawDate", wd.getWithdrawDate().toString());
 		map.put("amount", (spendMoney + spendPoint) + "");
 		map.put("withdrawCash", spendMoney + "");
 		map.put("point", spendPoint + "");
-		map.put("pointSave", point.getPointSave() + "");
-		map.put("levelRatio", ratio + "");
+		map.put("pointSave", point != null ? point.getPointSave() + "" : "0");
+		map.put("levelRatio", point != null ? (Math.round((double) point.getPointSave() / (double) spendMoney * 100) / 100.0) + "" : "0");
 
 		System.out.println(map);
 		return map;
@@ -179,7 +168,9 @@ public class CardService {
 
 		// 출금 내역 + 입금 내역을 합쳐서 날짜별로 내림차순하기위해 TransactionVO로 변환하여 통합
 		for (WithdrawVO withdraw : withdrawList) {
-			TransactionVO transaction = TransactionVO.builder().type("-").storeName(withdraw.getStore().getStoreName())
+			TransactionVO transaction = TransactionVO.builder()
+					.no(withdraw.getWithdrawNo())
+					.type("-").storeName(withdraw.getStore().getStoreName())
 					.amount(withdraw.getWithdrawCash()).amountHistory(withdraw.getWithdrawHistory())
 					.date(withdraw.getWithdrawDate().toString()
 							.substring(2, withdraw.getWithdrawDate().toString().indexOf('.')).replaceAll("-", "/"))
@@ -188,7 +179,8 @@ public class CardService {
 		}
 
 		for (DepositVO deposit : depositList) {
-			TransactionVO transaction = TransactionVO.builder().type("+").storeName("충전")
+			TransactionVO transaction = TransactionVO.builder()
+					.type("+").storeName("충전")
 					.amount(deposit.getDepositCash()).amountHistory(deposit.getDepositHistory())
 					.date(deposit.getDepositDate().toString()
 							.substring(2, deposit.getDepositDate().toString().indexOf('.')).replaceAll("-", "/"))
@@ -243,8 +235,7 @@ public class CardService {
 	public HashMap<String, String> selectWithdraws(String userNo) {
 		HashMap<String, String> map = new HashMap<>();
 
-		int num = Integer.parseInt(userNo);
-		UserVO user = userRepo.findById(num).get();
+		UserVO user = userRepo.findById(Integer.parseInt(userNo)).get();
 		CardVO card = cardRepo.findByUser(user);
 
 		List<WithdrawVO> wdList = wdRepo.findByCardOrderByWithdrawDateDesc(card);
@@ -252,17 +243,15 @@ public class CardService {
 		int spendMoney = wd.getWithdrawCash();
 		int spendPoint = wd.getWithdrawPoint();
 
-		List<PointVO> poList = pointRepo.findByCardOrderByPointDateDesc(card);
-		PointVO point = poList.get(0);
-		double ratio = Math.round((double) point.getPointSave() / (double) spendMoney * 100) / 100.0;
+		PointVO point = pointRepo.findByWithdrawNo(wd.getWithdrawNo());
 
 		map.put("storeName", wd.getStore().getStoreName());
 		map.put("withdrawDate", wd.getWithdrawDate().toString());
 		map.put("amount", (spendMoney + spendPoint) + "");
 		map.put("withdrawCash", spendMoney + "");
 		map.put("point", spendPoint + "");
-		map.put("pointSave", point.getPointSave() + "");
-		map.put("levelRatio", ratio + "");
+		map.put("pointSave", point != null ? point.getPointSave() + "" : "0");
+		map.put("levelRatio", point != null ? (Math.round((double) point.getPointSave() / (double) spendMoney * 100) / 100.0) + "" : "0");
 
 		return map;
 	}

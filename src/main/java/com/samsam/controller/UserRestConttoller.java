@@ -5,7 +5,7 @@ import java.util.Random;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
-
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -215,5 +215,19 @@ public class UserRestConttoller {
 		}
 
 		return message;
+	}
+	
+	//회원 탈퇴 
+	@DeleteMapping(value = "/delete.sam")
+	public int deleteUser(@RequestParam int userNo) {
+		int user_no =userNo;
+		UserVO user = userRepo.findById(userNo).get();
+		userRepo.delete(user);
+		
+	
+			user_no = 0;
+		
+		
+		return user_no;
 	}
 }

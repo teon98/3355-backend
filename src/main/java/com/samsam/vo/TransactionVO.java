@@ -14,6 +14,7 @@ import lombok.ToString;
 @Getter
 @Setter
 public class TransactionVO {
+	private Integer no;
 	private String type;
 	private Integer amount;
 	private Integer amountHistory;
