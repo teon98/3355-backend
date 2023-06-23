@@ -66,7 +66,10 @@ public class MyPageRestController {
 	// 출석일수---달 지정 안해줫다 내일하자
 	@GetMapping(value = "/stampday.sam")
 	public int UserStamp(@RequestParam int userNo) {
-		int stamp = dayRepo.findByUser(userNo);
+		Calendar calendar = Calendar.getInstance();
+        SimpleDateFormat dayFormat = new SimpleDateFormat("yy/MM/");
+        String date = dayFormat.format(calendar.getTime());
+		int stamp = dayRepo.findByUserAndDate(userNo,date); // 유저 번호와 연/월줘서 검색
 	
 		System.out.println(stamp);
 		return stamp;
@@ -89,8 +92,8 @@ public class MyPageRestController {
         }
 		
 		return msg;
-	}
-
+		}
+	
 	// 운동일수
 	@GetMapping(value = "/workday.sam")
 	public int UserLogin(@RequestParam int userNo) {
