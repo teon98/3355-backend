@@ -63,6 +63,8 @@ public class KyungYunTest {
 	@Autowired
 	AlarmRepository alaRepo;
 	
+
+	// 알림 배지 갯수
 	// 결제 상세 내역에서 단 건 상세 보기 (영수증)
 	@Test
 	void showDetailOne() {
@@ -88,7 +90,6 @@ public class KyungYunTest {
 	}
 	
 	// 알림 배지 갯수
-//	@Test
 	void getCountAlarm() {
 		String userNo = 2+"";
 		int userNum = Integer.parseInt(userNo);

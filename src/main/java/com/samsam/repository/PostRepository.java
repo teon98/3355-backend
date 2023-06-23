@@ -10,5 +10,7 @@ import com.samsam.vo.UserVO;
 public interface PostRepository extends CrudRepository<PostVO, Integer> {
 	
 	public List<PostVO> findByUser(UserVO user);
-	public List<PostVO> findByUserIn(List<UserVO> users);
+	public List<PostVO> findByUserInOrderByPostDateDesc(List<UserVO> users);
+	//게시물 불러올시 최신순으로 불러오기 위해 DESC추가
+	public List<PostVO> findByUserOrderByPostDateDesc(UserVO user);
 }

@@ -15,6 +15,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import com.samsam.repository.CommRepository;
 import com.samsam.repository.FollowRepository;
+import com.samsam.repository.GoodRepository;
 import com.samsam.repository.PostRepository;
 import com.samsam.repository.PostTagRepository;
 import com.samsam.repository.ProfileRepository;
@@ -23,6 +24,7 @@ import com.samsam.repository.UserRepository;
 import com.samsam.vo.CommentVO;
 import com.samsam.vo.FollowId;
 import com.samsam.vo.FollowVO;
+import com.samsam.vo.GoodVO;
 import com.samsam.vo.PostTagVO;
 import com.samsam.vo.PostVO;
 import com.samsam.vo.ProfileVO;
@@ -46,10 +48,40 @@ public class TaeyoungTest {
 	FollowRepository followRepo;
 	@Autowired
 	ProfileRepository profileRepo;
+	@Autowired
+	GoodRepository goodRepo;
 	
 	@Test
+	void test16() {
+		//pathvariable로 들어온 user닉네임을 찾는다.
+		String userNickname = "깡불호";
+		UserVO user = userRepo.findByUserNickname(userNickname);
+		
+		//필요 정보
+		//user이미지, userlevel, usernickname, userAbout
+		
+		ProfileVO profile = profileRepo.findByUser(user);
+		System.out.println(profile.toString());
+	}
+	
+	//@Test
+	void test15() {
+		List<Object> result = new ArrayList<>();
+		
+		UserVO user = userRepo.findById(1).get();
+		//포스트 찾기
+		List<PostVO> myPostList = postRepo.findByUserOrderByPostDateDesc(user);
+		
+		for(PostVO post : myPostList) {
+			System.out.println(post.getPostNo());
+			System.out.println(goodRepo.findByGoodsCount(post.getPostNo()));
+		}
+		
+		
+	}
+	//@Test
 	void test13() {
-		//내가 팔로우 하는 사람들 + 내 게시물만 전체 조회하기
+		//내가 팔로우 하는 사람들 + 내 게시물만 전체 조회하기 + 근데 좋아요도 같이 불러오는
 		UserVO user = userRepo.findById(1).get();
 		
 		//내가 팔로우 하는 사람들 찾기
@@ -65,11 +97,25 @@ public class TaeyoungTest {
 		}
 		
 		//postRepo
-		List<PostVO> followerPosts = postRepo.findByUserIn(myFoloowerUserList);
+		List<PostVO> followerPosts = postRepo.findByUserInOrderByPostDateDesc(myFoloowerUserList);
 		for(PostVO post: followerPosts) {
 			System.out.println(post.getPostNo());
+			//좋아요도... 찾아야 하는
+			System.out.println(goodRepo.findByGoodsCount(post.getPostNo()));
 		}
 		
+	}
+	
+	//@Test
+	void test14() {
+		PostVO post = postRepo.findById(5).get();
+		UserVO user = userRepo.findById(1).get();
+		//좋아요 누르면 저장
+		GoodVO good = GoodVO.builder()
+				.post(post)
+				.user(user)
+				.build();
+		goodRepo.save(good);
 	}
 	
 	//Test
