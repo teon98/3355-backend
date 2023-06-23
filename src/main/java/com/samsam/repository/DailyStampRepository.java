@@ -11,8 +11,8 @@ import com.samsam.vo.WorkVO;
 
 //출석체크 레포
 public interface DailyStampRepository extends CrudRepository<DailyStampVO, Integer> {
-	@Query(value = "select count(*) from dailystamps where user_no = ?1", nativeQuery = true)
-	public int findByUser(int userNo);//몇번출석햇나
+	@Query(value = "select count(*) from dailystamps where user_no = ?1 and daily_date like %?2%", nativeQuery = true)
+	public int findByUserAndDate(int userNo,String Date);//몇번출석햇나
 	
 	@Query(value = "select * from dailystamps where daily_date like %?1% and user_no = ?2", nativeQuery = true)
 	public DailyStampVO findByDailyDateContaining(String Date,int userNo);
