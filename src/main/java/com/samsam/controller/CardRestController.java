@@ -34,7 +34,8 @@ public class CardRestController {
 	@GetMapping("/history/detail")
 	public HashMap<String, String> selectWithdrawDetail(String userNo, String date) {
 		return cardService.selectWithdrawDetail(userNo, date);
-
+	}
+	
 	// 카드번호와 사용자 별명 가져오기
 	@GetMapping("/cardCodeNick")
 	public HashMap<String, String> getCardCodeNick(String userNo) {
@@ -53,11 +54,6 @@ public class CardRestController {
 		return cardService.allReadAlarm(userNo);
 	}
 
-	// 알림 배지 갯수
-	@GetMapping("/alarm-count")
-	public int getCountAlarm(String userNo) {
-		return cardService.getCountAlarm(userNo);
-	}
 
 	// 읽지 않은 알림 전체 + 읽은 알림 5건 조회
 	@GetMapping("/alarm")

@@ -27,6 +27,16 @@ public class CommunityService {
 	@Autowired
 	UserRepository userRepo;
 	
+	//User 정보 보여주기(로그인한 UserX)
+	public ProfileVO profile(String userNickname){
+		HashMap<String, String> result = new HashMap<String, String>();
+		
+		UserVO user = userRepo.findByUserNickname(userNickname);
+		ProfileVO profile = profileRepo.findByUser(user);
+		
+		return profile;
+	}
+	
 	//로그인한 User 정보 보여주기
 	public HashMap<String, String> UserPofile(int userNo) {
 		HashMap<String, String> result = new HashMap<String, String>();

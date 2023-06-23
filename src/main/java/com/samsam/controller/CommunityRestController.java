@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.samsam.service.CommunityService;
+import com.samsam.vo.ProfileVO;
 
 @RestController
 @RequestMapping("/commu")
@@ -18,6 +19,11 @@ public class CommunityRestController {
 	
 	@Autowired
 	CommunityService communityService;
+	
+	@GetMapping(value="profile")
+	public ProfileVO profile(@RequestParam String userNickname){
+		return communityService.profile(userNickname);
+	}
 	
 	@GetMapping(value = "followingProfileImgList")
 	//커뮤니티 홈에서 내가 팔로우하는 사람들의 프로필 목록 보여주기

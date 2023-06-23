@@ -2,6 +2,8 @@ package com.samsam.service;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 import javax.transaction.Transactional;
@@ -10,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.samsam.repository.FollowRepository;
+import com.samsam.repository.GoodRepository;
 import com.samsam.repository.PostRepository;
 import com.samsam.repository.PostTagRepository;
 import com.samsam.repository.TagRepository;
@@ -32,6 +36,56 @@ public class PostService {
 	TagRepository tagRepo;
 	@Autowired
 	PostTagRepository posttagRepo;
+	@Autowired
+	FollowRepository followRepo;
+	@Autowired
+	GoodRepository goodRepo;
+	
+	//내 Post만 불러오기
+	public List<Object> myPost(int userNo){
+		
+		List<Object> result = new ArrayList<>();
+		
+		UserVO user = userRepo.findById(userNo).get();
+		//포스트 찾기
+		List<PostVO> myPostList = postRepo.findByUserOrderByPostDateDesc(user);
+		
+		for(PostVO post : myPostList) {
+			HashMap<String, Object> viewpost = new HashMap<>();
+			viewpost.put("post", post);
+			viewpost.put("goodsCount", goodRepo.findByGoodsCount(post.getPostNo()));
+			result.add(viewpost);
+		}
+		
+		return result;
+	}
+	
+	//나와 내가 팔로우 하는 사람들의 Post 불러오기
+	public List<Object> mainPost(int userNo){
+		List<Object> result = new ArrayList<>();
+		
+		UserVO user = userRepo.findById(userNo).get();
+		
+		List<Integer> myFoloowerList = followRepo.findByFollowStart(user.getUserNo());
+		myFoloowerList.add(user.getUserNo());//[1,2,3]
+		
+		List<UserVO> myFoloowerUserList = new ArrayList<UserVO>();
+		
+		for(int f_num: myFoloowerList) {
+			UserVO f_user = userRepo.findById(f_num).get();
+			myFoloowerUserList.add(f_user);
+		}
+		
+		List<PostVO> followerPosts = postRepo.findByUserInOrderByPostDateDesc(myFoloowerUserList);
+		for(PostVO post: followerPosts) {
+			HashMap<String, Object> viewpost = new HashMap<>();
+			viewpost.put("post", post);
+			viewpost.put("goodsCount", goodRepo.findByGoodsCount(post.getPostNo()));
+			result.add(viewpost);
+		}
+		
+		return result;
+	}
 	
 	//S3에 Post 이미지 업로드 + Tag 업로드
 	public Integer uploadPost(
