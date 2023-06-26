@@ -50,6 +50,11 @@ public class PostService {
 	@Autowired
 	WorkRepository workRepo;
 	
+	// 내림차순된 모든 Post 가져오기
+	public List<PostVO> getAllPosts(){
+		return postRepo.findAllByOrderByPostDateDesc();
+	}
+	
 	// 댓글 다는 사용자와 포스트를 찾아서 댓글달기 
 	public CommentVO addComment(int userNo, int postNo, String commContent) {
 		UserVO user = userRepo.findById(userNo).get();
