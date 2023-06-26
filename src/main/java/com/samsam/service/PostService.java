@@ -3,7 +3,6 @@ package com.samsam.service;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 
 import javax.transaction.Transactional;
@@ -12,12 +11,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.samsam.repository.CommRepository;
 import com.samsam.repository.FollowRepository;
 import com.samsam.repository.GoodRepository;
 import com.samsam.repository.PostRepository;
 import com.samsam.repository.PostTagRepository;
 import com.samsam.repository.TagRepository;
 import com.samsam.repository.UserRepository;
+import com.samsam.vo.CommentVO;
 import com.samsam.vo.PostTagVO;
 import com.samsam.vo.PostVO;
 import com.samsam.vo.TagVO;
@@ -40,6 +41,23 @@ public class PostService {
 	FollowRepository followRepo;
 	@Autowired
 	GoodRepository goodRepo;
+	@Autowired
+	CommRepository commRepo;
+	
+	// 댓글 다는 사용자와 포스트를 찾아서 댓글달기 
+	public CommentVO addComment(int userNo, int postNo, String commContent) {
+		UserVO user = userRepo.findById(userNo).get();
+		PostVO post = postRepo.findById(postNo).get();
+		
+		CommentVO comment = CommentVO.builder()
+				.commContent(commContent)
+				.post(post)
+				.commuser(user)
+				.build();
+		commRepo.save(comment);
+		
+		return comment;
+	}
 	
 	//선택한 User의 프로필 보여주기
 	public int Post(String userNickName){

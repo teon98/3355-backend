@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.samsam.service.PostService;
+import com.samsam.vo.CommentVO;
 
 @RestController
 @RequestMapping("/post")
@@ -21,10 +22,14 @@ public class PostRestController {
 
 	@Autowired
 	PostService postservice;
-	
+
 	@GetMapping(value="/followerPost")
 	public int Post(@RequestParam  String userNickName){
 		return postservice.Post(userNickName);
+
+	@PostMapping(value="/addcomments")
+	public CommentVO addComment(int userNo, int postNo, String commContent) {
+		return postservice.addComment(userNo, postNo, commContent);
 	}
 	
 	@GetMapping(value="/my")
