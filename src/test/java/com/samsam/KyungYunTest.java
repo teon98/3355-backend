@@ -1,5 +1,6 @@
 package com.samsam;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
@@ -24,7 +25,6 @@ import com.samsam.repository.WithdrawRepository;
 import com.samsam.repository.WorkRepository;
 import com.samsam.vo.AlarmVO;
 import com.samsam.vo.CardVO;
-import com.samsam.vo.CardcustomVO;
 import com.samsam.vo.DepositVO;
 import com.samsam.vo.FollowId;
 import com.samsam.vo.FollowVO;
@@ -67,19 +67,26 @@ public class KyungYunTest {
 	// 알림 배지 갯수
 	// 결제 상세 내역에서 단 건 상세 보기 (영수증)
 	@Test
-	void show() {
-		String date = "23/06/21 14:06:09";
-		String userNo = "2";
-		int userNum = Integer.parseInt(userNo);
-		System.out.println(userNum);
+	void showDetailOne() {
+		String withdrawNo = "38";
 		
-		UserVO user = userRepo.findById(userNum).orElse(null);
-		CardVO card = cardRepo.findByUser(user);
-		WithdrawVO withdraw = wdRepo.findByDate(date, card.getCardSeq());
+		HashMap<String, String> map = new HashMap<>();
+		WithdrawVO wd = wdRepo.findById(Integer.parseInt(withdrawNo)).get();
+		PointVO point = pointRepo.findByWithdrawNo(Integer.parseInt(withdrawNo));
 		
-		System.out.println(withdraw.getWithdrawCash());
-		System.out.println(withdraw.getWithdrawPoint());
-		System.out.println(withdraw.getWithdrawDate());
+		int spendMoney = wd.getWithdrawCash();
+		int spendPoint = wd.getWithdrawPoint();
+		double ratio = Math.round((double) point.getPointSave() / (double) spendMoney * 100) / 100.0;
+
+		map.put("storeName", wd.getStore().getStoreName());
+		map.put("withdrawDate", wd.getWithdrawDate().toString());
+		map.put("amount", (spendMoney + spendPoint) + "");
+		map.put("withdrawCash", spendMoney + "");
+		map.put("point", spendPoint + "");
+		map.put("pointSave", point.getPointSave() + "");
+		map.put("levelRatio", ratio + "");
+
+		System.out.println(map);
 	}
 	
 	// 알림 배지 갯수
