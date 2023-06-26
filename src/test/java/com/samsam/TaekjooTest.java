@@ -60,45 +60,24 @@ public class TaekjooTest {
 
 	@Test
 	void test13() {
-		// 사용자 생성
-		int userNo = 3;
-		UserVO user = userRepo.findById(userNo).get();
-		PostVO post = PostVO.builder()
-				.user(user)
-				.postImg("postImg")
-				.build();
-		postRepo.save(post);
-		
-		// 포스트 생성
-//		PostVO post = createPost(user, "image.jpg", );
-
-		// 다른 사용자들에게 댓글 달기
-		List<UserVO> allUsers = (List<UserVO>) userRepo.findAll();
-		for (UserVO otherUser : allUsers) {
-			if (!otherUser.equals(user)) {
-				createComment(otherUser, post, "Comment content");
-			}
-		}
+	    // 댓글 다는 사용자 
+	    int userNo = 3;
+	    UserVO user = userRepo.findById(userNo).get();
+	    
+	    // 포스트 찾기
+	    int postNo = 5;
+	    PostVO post = postRepo.findById(postNo).get();
+	    
+	    // 사용자들이 댓글 달기
+	    CommentVO comment = CommentVO.builder()
+	            .commContent("댓글 내용")
+	            .post(post)
+	            .commuser(user)
+	            .build();
+	    
+	    commRepo.save(comment);
 	}
 
-	private PostVO createPost(UserVO user, String image, Timestamp postDate) {
-		PostVO post = new PostVO();
-		post.setUser(user);
-		post.setPostImg(image);
-
-		// 포스트 저장
-		return postRepo.save(post);
-	}
-
-	private CommentVO createComment(UserVO user, PostVO post, String content) {
-		CommentVO comment = new CommentVO();
-		comment.setCommuser(user);
-		comment.setPost(post);
-		comment.setCommContent(content);
-
-		// 댓글 저장
-		return commRepo.save(comment);
-	}
 
 	// @Test
 	void test1() {
