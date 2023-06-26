@@ -1,7 +1,9 @@
 package com.samsam.service;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 
@@ -18,11 +20,13 @@ import com.samsam.repository.PostRepository;
 import com.samsam.repository.PostTagRepository;
 import com.samsam.repository.TagRepository;
 import com.samsam.repository.UserRepository;
+import com.samsam.repository.WorkRepository;
 import com.samsam.vo.CommentVO;
 import com.samsam.vo.PostTagVO;
 import com.samsam.vo.PostVO;
 import com.samsam.vo.TagVO;
 import com.samsam.vo.UserVO;
+import com.samsam.vo.WorkVO;
 
 @Service
 @Transactional
@@ -43,6 +47,8 @@ public class PostService {
 	GoodRepository goodRepo;
 	@Autowired
 	CommRepository commRepo;
+	@Autowired
+	WorkRepository workRepo;
 	
 	// 내림차순된 모든 Post 가져오기
 	public List<PostVO> getAllPosts(){
@@ -170,9 +176,32 @@ public class PostService {
 					.tag(currentTag)
 					.build();
 			posttagRepo.save(posttag);
+			
+			//하루에 한번 오운완 
+			if(tag.equals("오운완")) {
+				Calendar calendar = Calendar.getInstance();
+		        SimpleDateFormat dayFormat = new SimpleDateFormat("yy/MM/dd");
+		        String date = dayFormat.format(calendar.getTime());
+		        if(workRepo.findByWorkDateContaining3(date, userNo)==null) {
+		        	UserVO user1 = userRepo.findById(userNo).get();
+		        	WorkVO work = WorkVO.builder().user(user1).build();
+		        	workRepo.save(work);
+		        }
+			}
 		}
 		
 		
+		
+		
 		return savePost.getPostNo();
+	}
+
+	//태그 10개 가져오기
+	public List<String> getTags() {
+		List<String> taglist = tagRepo.findByTags();
+//		for(String tag:taglist) {
+//			System.out.println(tag);
+//		}
+		return taglist;
 	}
 }
