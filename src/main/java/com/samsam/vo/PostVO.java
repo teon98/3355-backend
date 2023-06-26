@@ -48,6 +48,7 @@ public class PostVO implements Serializable {
 	@UpdateTimestamp
 	private Timestamp postDate;
 
+	@JsonIgnore
 	@ManyToOne
 	@JoinColumn(name = "user_no")
 	private UserVO user;

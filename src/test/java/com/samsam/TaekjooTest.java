@@ -8,6 +8,7 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.samsam.repository.AlarmRepository;
 import com.samsam.repository.CardRepository;
@@ -57,8 +58,19 @@ public class TaekjooTest {
 	PostRepository postRepo;
 	@Autowired
 	CommRepository commRepo;
+	
 
 	@Test
+	void test15() {
+	    // 모든 Post 가져오기
+		List<PostVO> allPosts = postRepo.findAllByOrderByPostDateDesc();
+		
+		for(PostVO post : allPosts) {
+
+		}	  
+	}
+
+	//@Test
 	void test13() {
 	    // 댓글 다는 사용자 
 	    int userNo = 3;
@@ -74,7 +86,6 @@ public class TaekjooTest {
 	            .post(post)
 	            .commuser(user)
 	            .build();
-	    
 	    commRepo.save(comment);
 	}
 
