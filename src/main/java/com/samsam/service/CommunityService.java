@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import com.samsam.repository.FollowRepository;
 import com.samsam.repository.ProfileRepository;
 import com.samsam.repository.UserRepository;
+import com.samsam.vo.PostVO;
 import com.samsam.vo.ProfileVO;
 import com.samsam.vo.UserVO;
 
@@ -26,6 +27,7 @@ public class CommunityService {
 	
 	@Autowired
 	UserRepository userRepo;
+
 	
 	//User 정보 보여주기(로그인한 UserX)
 	public ProfileVO profile(String userNickname){

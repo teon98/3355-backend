@@ -22,8 +22,13 @@ public class PostRestController {
 	@Autowired
 	PostService postservice;
 	
+	@GetMapping(value="/followerPost")
+	public int Post(@RequestParam  String userNickName){
+		return postservice.Post(userNickName);
+	}
+	
 	@GetMapping(value="/my")
-	public List<Object> myPost(int userNo){
+	public List<Object> myPost(@RequestParam int userNo){
 		return postservice.myPost(userNo);
 	}
 	

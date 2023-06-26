@@ -51,7 +51,30 @@ public class TaeyoungTest {
 	@Autowired
 	GoodRepository goodRepo;
 	
+	
 	@Test
+	void test18() {
+		
+	}
+	
+	//@Test
+	void test17() {
+		List<Object> result = new ArrayList<>();
+		
+		//1. userNickname으로 post를 get 해와햐함.
+		String userNickname = "TEON";
+		
+		UserVO user = userRepo.findByUserNickname(userNickname);
+		List<PostVO> myPostList = postRepo.findByUserOrderByPostDateDesc(user);
+		
+		for(PostVO post : myPostList) {
+			System.out.println(post.getPostNo());
+			System.out.println(goodRepo.findByGoodsCount(post.getPostNo()));
+		}
+		
+	}
+	
+	//@Test
 	void test16() {
 		//pathvariable로 들어온 user닉네임을 찾는다.
 		String userNickname = "깡불호";

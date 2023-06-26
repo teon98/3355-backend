@@ -41,6 +41,16 @@ public class PostService {
 	@Autowired
 	GoodRepository goodRepo;
 	
+	//선택한 User의 프로필 보여주기
+	public int Post(String userNickName){
+		List<Object> result = new ArrayList<>();
+		
+		UserVO user = userRepo.findByUserNickname(userNickName);
+		
+		return user.getUserNo();
+		
+	}
+	
 	//내 Post만 불러오기
 	public List<Object> myPost(int userNo){
 		
