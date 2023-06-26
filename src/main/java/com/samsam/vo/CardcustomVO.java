@@ -41,6 +41,11 @@ public class CardcustomVO {
 	@Column(nullable = true, length = 30)
 	@Builder.Default
 	private String customLettering = "";
+	
+	@Column(nullable = false)
+	@Builder.Default
+	private String customColor3 = "white";
+
 
 	@ManyToOne
 	@JoinColumn(name = "user_no")

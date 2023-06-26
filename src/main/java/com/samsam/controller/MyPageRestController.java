@@ -38,12 +38,13 @@ public class MyPageRestController {
 	
 	//커스텀 카드 입력
 	@PostMapping(value="/postcustom.sam")
-	public String postCustom(@RequestParam int userNo, @RequestParam String customColor1,@RequestParam String customColor2, @RequestParam String customLettering) {
+	public String postCustom(@RequestParam int userNo, @RequestParam String customColor1,@RequestParam String customColor2, @RequestParam String customLettering,@RequestParam String customColor3) {
 		String msg = "";
 		CardcustomVO card = cusRepo.findByUserNo(userNo);
 		card.setCustomColor1(customColor1);
 		card.setCustomColor2(customColor2);
 		card.setCustomLettering(customLettering);
+		card.setCustomColor3(customColor3);
 		
 		CardcustomVO card2 =cusRepo.save(card);
 		if(card2.getCustomColor1().equals(card.getCustomColor1())) {
