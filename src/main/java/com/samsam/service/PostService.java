@@ -120,6 +120,8 @@ public class PostService {
 			HashMap<String, Object> viewpost = new HashMap<>();
 			viewpost.put("post", post);
 			viewpost.put("goodsCount", goodRepo.findByGoodsCount(post.getPostNo()));
+			viewpost.put("userNickname", post.getUser().getUserNickname());
+			viewpost.put("userNo", post.getUser().getUserNo());
 			result.add(viewpost);
 		}
 		
