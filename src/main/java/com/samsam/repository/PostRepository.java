@@ -15,4 +15,5 @@ public interface PostRepository extends CrudRepository<PostVO, Integer> {
 	public List<PostVO> findByUserOrderByPostDateDesc(UserVO user);
 	// 모든 게시물 불러와서 내림차순이요~
 	public List<PostVO> findAllByOrderByPostDateDesc();
+
 }

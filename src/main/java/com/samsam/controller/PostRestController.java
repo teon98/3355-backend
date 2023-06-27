@@ -2,6 +2,7 @@ package com.samsam.controller;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,9 +25,14 @@ public class PostRestController {
 	@Autowired
 	PostService postservice;
 	
+	@GetMapping(value = "/likesdesc")
+	public List<Map<String, Object>> getLikeCountsDesc() {
+	  return postservice.getLikeCountsDesc();
+	}
+	
 	@GetMapping(value="/allPosts")
-	public List<PostVO> getAllPosts(){
-		return postservice.getAllPosts();
+	public List<PostVO> getAllPostsWithLikes(){
+		return postservice.getAllPostsWithLikes();
 	}
 	@GetMapping(value="/followerPost")
 	public int Post(@RequestParam  String userNickName){
