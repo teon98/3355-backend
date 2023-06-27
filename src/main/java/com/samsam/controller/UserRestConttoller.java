@@ -169,8 +169,8 @@ public class UserRestConttoller {
 		}
 		return userNo;
 	}
-	
-	@PutMapping(value = "/findPass.sam") // 비밀번호 찾기
+	// 비밀번호 찾기
+	@PutMapping(value = "/findPass.sam") 
 	public Integer FindPass(@RequestParam String userEmail, @RequestParam String userNickname) {
 		Integer userNo = 0;
 		if (userRepo.findByUserEmailAndUserNickname(userEmail, userNickname) != null) {
