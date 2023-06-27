@@ -52,8 +52,20 @@ public class TaeyoungTest {
 	GoodRepository goodRepo;
 	
 	
-	@Test
+	//@Test
 	void test18() {
+		//팔로우 한 사람인지 아닌지 알아내기
+		String userNickname = "깡불호";
+		
+		UserVO user = userRepo.findByUserNickname(userNickname);
+		
+		int count1 = followRepo.findByEachOther(1, user.getUserNo());
+		int count2 = followRepo.findByEachOther(user.getUserNo(), 1);
+		
+		System.out.println("내가 팔로우 중인가?" + count1);
+		System.out.println("그 사람이 나를 팔로우 중인가?" + count2);
+		System.out.println("서로가 팔로우 중인가?" + (count1 == count2));
+		
 		
 	}
 	

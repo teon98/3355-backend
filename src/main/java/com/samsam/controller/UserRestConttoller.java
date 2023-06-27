@@ -75,7 +75,7 @@ public class UserRestConttoller {
 		
 	
 		UserVO newuser = userRepo.save(user);
-		ProfileVO profile = ProfileVO.builder().profileImg("이미지없음").user(newuser).build();
+		ProfileVO profile = ProfileVO.builder().user(newuser).build();
 
 		proRepo.save(profile);
 		return newuser.getUserNo();
@@ -109,7 +109,7 @@ public class UserRestConttoller {
 		user1.setUserNickname(user.getUserNickname());
 		
 		UserVO newuser = userRepo.save(user1);
-		ProfileVO profile = ProfileVO.builder().profileImg("이미지없음").user(newuser).build();
+		ProfileVO profile = ProfileVO.builder().user(newuser).build();
 
 		proRepo.save(profile);
 		return newuser.getUserNo();

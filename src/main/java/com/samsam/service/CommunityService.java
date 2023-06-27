@@ -12,6 +12,8 @@ import org.springframework.stereotype.Service;
 import com.samsam.repository.FollowRepository;
 import com.samsam.repository.ProfileRepository;
 import com.samsam.repository.UserRepository;
+import com.samsam.vo.FollowId;
+import com.samsam.vo.FollowVO;
 import com.samsam.vo.PostVO;
 import com.samsam.vo.ProfileVO;
 import com.samsam.vo.UserVO;
@@ -27,7 +29,62 @@ public class CommunityService {
 	
 	@Autowired
 	UserRepository userRepo;
+	
+	//팔로우 취소하기
+	public void followCancel(int owner, int user) {
+		UserVO user1 = userRepo.findById(owner).get();
+		UserVO user2 = userRepo.findById(user).get();
+		
+		FollowId fid = FollowId.builder()
+				.followStart(user1)
+				.followEnd(user2)
+				.build();
+		
+		followRepo.deleteById(fid);
+	}
+	
+	//팔로우 하기
+	public FollowVO followRequest(int owner, int user) {
+		UserVO user1 = userRepo.findById(owner).get();
+		UserVO user2 = userRepo.findById(user).get();
+		
+		FollowId fid = FollowId.builder()
+				.followStart(user1)
+				.followEnd(user2)
+				.build();
+		
+		FollowVO f = FollowVO.builder()
+				.follow(fid)
+				.build();
+		
+		return followRepo.save(f);
+	}
 
+	//서로 팔로우 중인지 여부 확인
+	public String followEachOther(int userNo, String userNickname) {
+		UserVO user = userRepo.findByUserNickname(userNickname);
+		
+		int count1 = followRepo.findByEachOther(userNo, user.getUserNo());
+		int count2 = followRepo.findByEachOther(user.getUserNo(), userNo);
+		
+		System.out.println("내가 팔로우 중인가?" + count1);
+		System.out.println("그 사람이 나를 팔로우 중인가?" + count2);
+		System.out.println("서로가 팔로우 중인가?" + (count1 == count2));
+		
+		String result = "";
+		
+		if( count1 == 1 ) {
+			result = "팔로우";
+		} else if(count1 == 0) {
+			if(count2 == 1) {
+				result = "맞팔로우";
+			}else {
+				result ="팔로잉";
+			}
+		}
+		
+		return result;
+	}
 	
 	//User 정보 보여주기(로그인한 UserX)
 	public ProfileVO profile(String userNickname){

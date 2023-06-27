@@ -38,6 +38,7 @@ public class PostRestController {
 	public int Post(@RequestParam  String userNickName){
 		return postservice.Post(userNickName);
 	}
+
 	@PostMapping(value="/addcomments")
 	public CommentVO addComment(int userNo, int postNo, String commContent) {
 		return postservice.addComment(userNo, postNo, commContent);
@@ -67,5 +68,17 @@ public class PostRestController {
 		}
 		
 		return ResponseEntity.ok(post_id);
+	}
+	
+	@GetMapping(value="/tags")//태그 10개 불러오기
+	public List<String> getTags(){
+		return postservice.getTags();
+	}
+	
+	@PostMapping(value="/goods")//좋아요 추가
+	public int insertGoods(@RequestParam int userNo, @RequestParam int postNo) {
+		int msg=postNo;
+		
+		return msg;
 	}
 }
