@@ -61,14 +61,14 @@ public class TaekjooTest {
 	
 
 	@Test
-	void test15() {
-	    // 모든 Post 가져오기
-		List<PostVO> allPosts = postRepo.findAllByOrderByPostDateDesc();
-		
-		for(PostVO post : allPosts) {
-
-		}	  
-	}
+//	void test15() {
+//	    // 모든 Post 가져오기
+//		List<PostVO> allPosts = postRepo.findAllByOrderByPostDateDesc();
+//		
+//		for(PostVO post : allPosts) {
+//			
+//		}	  
+//	}
 
 	//@Test
 	void test13() {

@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.transaction.Transactional;
 
@@ -47,76 +48,77 @@ public class PostService {
 	GoodRepository goodRepo;
 	@Autowired
 	CommRepository commRepo;
-	@Autowired
+  @Autowired
 	WorkRepository workRepo;
-	
-	// 내림차순된 모든 Post 가져오기
-	public List<PostVO> getAllPosts(){
+
+	// 좋아요 Count 기준을 내림차순
+	public List<Map<String, Object>> getLikeCountsDesc() {
+	    return goodRepo.findLikeCountByPostNo();
+	}
+
+	// 날짜 기준으로 내림차순으로 모든 Post가져오기
+	public List<PostVO> getAllPostsWithLikes() {
 		return postRepo.findAllByOrderByPostDateDesc();
 	}
-	
-	// 댓글 다는 사용자와 포스트를 찾아서 댓글달기 
+
+	// 댓글 다는 사용자와 포스트를 찾아서 댓글달기
 	public CommentVO addComment(int userNo, int postNo, String commContent) {
 		UserVO user = userRepo.findById(userNo).get();
 		PostVO post = postRepo.findById(postNo).get();
-		
-		CommentVO comment = CommentVO.builder()
-				.commContent(commContent)
-				.post(post)
-				.commuser(user)
-				.build();
+
+		CommentVO comment = CommentVO.builder().commContent(commContent).post(post).commuser(user).build();
 		commRepo.save(comment);
-		
+
 		return comment;
 	}
-	
-	//선택한 User의 프로필 보여주기
-	public int Post(String userNickName){
+
+	// 선택한 User의 프로필 보여주기
+	public int Post(String userNickName) {
 		List<Object> result = new ArrayList<>();
-		
+
 		UserVO user = userRepo.findByUserNickname(userNickName);
-		
+
 		return user.getUserNo();
-		
+
 	}
-	
-	//내 Post만 불러오기
-	public List<Object> myPost(int userNo){
-		
+
+	// 내 Post만 불러오기
+	public List<Object> myPost(int userNo) {
+
 		List<Object> result = new ArrayList<>();
-		
+
 		UserVO user = userRepo.findById(userNo).get();
-		//포스트 찾기
+		// 포스트 찾기
 		List<PostVO> myPostList = postRepo.findByUserOrderByPostDateDesc(user);
-		
-		for(PostVO post : myPostList) {
+
+		for (PostVO post : myPostList) {
 			HashMap<String, Object> viewpost = new HashMap<>();
 			viewpost.put("post", post);
 			viewpost.put("goodsCount", goodRepo.findByGoodsCount(post.getPostNo()));
 			result.add(viewpost);
 		}
-		
+
 		return result;
 	}
-	
-	//나와 내가 팔로우 하는 사람들의 Post 불러오기
-	public List<Object> mainPost(int userNo){
+
+	// 나와 내가 팔로우 하는 사람들의 Post 불러오기
+	public List<Object> mainPost(int userNo) {
 		List<Object> result = new ArrayList<>();
-		
+
 		UserVO user = userRepo.findById(userNo).get();
-		
+
 		List<Integer> myFoloowerList = followRepo.findByFollowStart(user.getUserNo());
-		myFoloowerList.add(user.getUserNo());//[1,2,3]
-		
+		myFoloowerList.add(user.getUserNo());// [1,2,3]
+
 		List<UserVO> myFoloowerUserList = new ArrayList<UserVO>();
-		
-		for(int f_num: myFoloowerList) {
+
+		for (int f_num : myFoloowerList) {
 			UserVO f_user = userRepo.findById(f_num).get();
 			myFoloowerUserList.add(f_user);
 		}
-		
+
 		List<PostVO> followerPosts = postRepo.findByUserInOrderByPostDateDesc(myFoloowerUserList);
-		for(PostVO post: followerPosts) {
+		for (PostVO post : followerPosts) {
 			HashMap<String, Object> viewpost = new HashMap<>();
 			viewpost.put("post", post);
 			viewpost.put("goodsCount", goodRepo.findByGoodsCount(post.getPostNo()));
@@ -124,59 +126,49 @@ public class PostService {
 			viewpost.put("userNo", post.getUser().getUserNo());
 			result.add(viewpost);
 		}
-		
+
 		return result;
 	}
-	
-	//S3에 Post 이미지 업로드 + Tag 업로드
-	public Integer uploadPost(
-			MultipartFile[] images, 
-			int userNo,
-			String[] tagList) throws IOException{
+
+	// S3에 Post 이미지 업로드 + Tag 업로드
+	public Integer uploadPost(MultipartFile[] images, int userNo, String[] tagList) throws IOException {
 		System.out.println("Upload S3 Images with post");
-		//user를 찾아
+		// user를 찾아
 		UserVO user = userRepo.findById(userNo).get();
-		//post를 생성
+		// post를 생성
 		PostVO post = new PostVO();
 		String image_list = "[";
-		for(MultipartFile image:images) {
-			if(image!=null && !image.isEmpty()) {
+		for (MultipartFile image : images) {
+			if (image != null && !image.isEmpty()) {
 				String sotredFileName = s3uploader.upload(image, "post");
 				image_list += (sotredFileName + ",");
 			}
 		}
-		//마지막에 ,빼주기
-		image_list = image_list.substring(0, image_list.length()-1);
-		post.setPostImg(image_list+"]");
+		// 마지막에 ,빼주기
+		image_list = image_list.substring(0, image_list.length() - 1);
+		post.setPostImg(image_list + "]");
 		post.setUser(user);
-		
-		//tagList DB 저장
-		//없는 tag면 새로 생성
-		//있는 tag면 count +1
-		for(String tag: tagList) {
+
+		// tagList DB 저장
+		// 없는 tag면 새로 생성
+		// 있는 tag면 count +1
+		for (String tag : tagList) {
 			TagVO currentTag = tagRepo.findByTagContent(tag);
-			if(currentTag!=null) { //null이 아니면 존재
-				currentTag.setTagCount(currentTag.getTagCount() + 1); //tag 개수 증가
-			}else { //null이면 아예 없다는 뜻이니까
-				currentTag = TagVO.builder()
-						.tagContent(tag)
-						.tagCount(1)
-						.build();
+			if (currentTag != null) { // null이 아니면 존재
+				currentTag.setTagCount(currentTag.getTagCount() + 1); // tag 개수 증가
+			} else { // null이면 아예 없다는 뜻이니까
+				currentTag = TagVO.builder().tagContent(tag).tagCount(1).build();
 			}
 			tagRepo.save(currentTag);
 		}
-		
-		//post는 두번째 save
+
+		// post는 두번째 save
 		PostVO savePost = postRepo.save(post);
-		
-		
-		//posttag save
-		for(String tag: tagList) {
+
+		// posttag save
+		for (String tag : tagList) {
 			TagVO currentTag = tagRepo.findByTagContent(tag);
-			PostTagVO posttag = PostTagVO.builder()
-					.post(post)
-					.tag(currentTag)
-					.build();
+			PostTagVO posttag = PostTagVO.builder().post(post).tag(currentTag).build();
 			posttagRepo.save(posttag);
 			
 			//하루에 한번 오운완 
@@ -191,10 +183,7 @@ public class PostService {
 		        }
 			}
 		}
-		
-		
-		
-		
+
 		return savePost.getPostNo();
 	}
 
