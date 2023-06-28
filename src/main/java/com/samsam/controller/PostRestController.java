@@ -77,8 +77,6 @@ public class PostRestController {
 	
 	@PostMapping(value="/goods")//좋아요 추가
 	public int insertGoods(@RequestParam int userNo, @RequestParam int postNo) {
-		int msg=postNo;
-		
-		return msg;
+		return postservice.insertGoods(userNo, postNo);
 	}
 }

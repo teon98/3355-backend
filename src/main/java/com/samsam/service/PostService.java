@@ -23,6 +23,7 @@ import com.samsam.repository.TagRepository;
 import com.samsam.repository.UserRepository;
 import com.samsam.repository.WorkRepository;
 import com.samsam.vo.CommentVO;
+import com.samsam.vo.GoodVO;
 import com.samsam.vo.PostTagVO;
 import com.samsam.vo.PostVO;
 import com.samsam.vo.TagVO;
@@ -194,5 +195,25 @@ public class PostService {
 //			System.out.println(tag);
 //		}
 		return taglist;
+	}
+	
+	//좋아요 추가
+	public int insertGoods(int userNo, int postNo) {
+		int msg=0;
+		UserVO user = userRepo.findById(userNo).get();
+		PostVO post = postRepo.findById(postNo).get();
+		
+		//좋아요가 없으면 추가
+		if(goodRepo.findByUserAndPost(user, post)==null) {
+			GoodVO good = GoodVO.builder().user(user).post(post).build();
+			GoodVO good2 = goodRepo.save(good);
+			msg = good2.getGood_no();
+		}else {//좋아요 있으면 삭제
+			GoodVO good = goodRepo.findByUserAndPost(user, post);
+			goodRepo.delete(good);
+			msg=0;
+		}
+		
+		return msg;
 	}
 }
