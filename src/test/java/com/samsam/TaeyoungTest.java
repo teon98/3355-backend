@@ -51,6 +51,15 @@ public class TaeyoungTest {
 	@Autowired
 	GoodRepository goodRepo;
 	
+//	@Test
+//	void test19() {
+//		PostVO post = postRepo.findById(26).get();
+//		List<CommentVO> comments= commRepo.findByPost(post);
+//		
+//		for(CommentVO comment: comments) {
+//			System.out.println(comment.getCommContent());
+//		}
+//	}
 	
 	//@Test
 	void test18() {
@@ -319,14 +328,14 @@ public class TaeyoungTest {
 	}
 	
 	//@Test
-	void test4() {
-		//특정 post의 모든 댓글 조회하기
-		PostVO post = postRepo.findById(5).get();
-		commRepo.findByPost(post).forEach(comm ->{
-			System.out.println(comm);
-		});
-		
-	}
+//	void test4() {
+//		//특정 post의 모든 댓글 조회하기
+//		PostVO post = postRepo.findById(5).get();
+//		commRepo.findByPost(post).forEach(comm ->{
+//			System.out.println(comm);
+//		});
+//		
+//	}
 	
 	//@Test
 	void test3() {

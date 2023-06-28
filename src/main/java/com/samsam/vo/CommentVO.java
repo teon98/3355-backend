@@ -15,6 +15,8 @@ import javax.persistence.Table;
 
 import org.hibernate.annotations.UpdateTimestamp;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -41,9 +43,11 @@ public class CommentVO implements Serializable {
 
 	@ManyToOne
 	@JoinColumn(name = "post_no")
+	@JsonIgnore
 	private PostVO post;
 
 	@ManyToOne
 	@JoinColumn(name = "user_no")
+	@JsonIgnore
 	private UserVO commuser;
 }

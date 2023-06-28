@@ -40,7 +40,10 @@ public class PostRestController {
 	}
 
 	@PostMapping(value="/addcomments")
-	public CommentVO addComment(int userNo, int postNo, String commContent) {
+	public CommentVO addComment(
+			@RequestParam int userNo, 
+			@RequestParam int postNo, 
+			@RequestParam String commContent) {
 		return postservice.addComment(userNo, postNo, commContent);
 	}
 	@GetMapping(value="/my")
