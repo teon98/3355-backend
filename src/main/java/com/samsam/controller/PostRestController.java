@@ -26,6 +26,7 @@ public class PostRestController {
 	@GetMapping(value="/followerPost")
 	public int Post(@RequestParam  String userNickName){
 		return postservice.Post(userNickName);
+	}
 
 	@PostMapping(value="/addcomments")
 	public CommentVO addComment(int userNo, int postNo, String commContent) {
