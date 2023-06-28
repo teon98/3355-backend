@@ -125,8 +125,11 @@ public class PostService {
 			viewpost.put("goodsCount", goodRepo.findByGoodsCount(post.getPostNo()));
 			viewpost.put("userNickname", post.getUser().getUserNickname());
 			viewpost.put("userNo", post.getUser().getUserNo());
+			viewpost.put("userProfileImg", post.getUser().getProfile().getProfileImg());
 			result.add(viewpost);
 		}
+		
+		
 
 		return result;
 	}
