@@ -96,6 +96,9 @@ public class PostService {
 			HashMap<String, Object> viewpost = new HashMap<>();
 			viewpost.put("post", post);
 			viewpost.put("goodsCount", goodRepo.findByGoodsCount(post.getPostNo()));
+			viewpost.put("userNickname", post.getUser().getUserNickname());
+			viewpost.put("userNo", post.getUser().getUserNo());
+			viewpost.put("userProfileImg", post.getUser().getProfile().getProfileImg());
 			result.add(viewpost);
 		}
 
@@ -131,6 +134,26 @@ public class PostService {
 		
 		
 
+		return result;
+	}
+	
+	// 모든 Post 가져오기 (좋아요 순 별)
+	public List<Object> loadAllPost() {
+		List<Object> result = new ArrayList<>();
+		
+		// 포스트 찾기
+		List<PostVO> allPosts = postRepo.findAllByOrderByPostDateDesc();
+
+		for (PostVO post : allPosts) {
+			HashMap<String, Object> viewpost = new HashMap<>();
+			viewpost.put("post", post);
+			viewpost.put("goodsCount", goodRepo.findByGoodsCount(post.getPostNo()));
+			viewpost.put("userNickname", post.getUser().getUserNickname());
+			viewpost.put("userNo", post.getUser().getUserNo());
+			viewpost.put("userProfileImg", post.getUser().getProfile().getProfileImg());
+			result.add(viewpost);
+		}
+		
 		return result;
 	}
 

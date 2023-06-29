@@ -82,4 +82,9 @@ public class PostRestController {
 	public int insertGoods(@RequestParam int userNo, @RequestParam int postNo) {
 		return postservice.insertGoods(userNo, postNo);
 	}
+	
+	@GetMapping(value="/loadAllPost")
+	public List<Object> loadAllPost() {
+		return postservice.loadAllPost();
+	}
 }

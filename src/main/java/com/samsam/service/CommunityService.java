@@ -11,11 +11,13 @@ import org.springframework.stereotype.Service;
 
 import com.samsam.repository.FollowRepository;
 import com.samsam.repository.ProfileRepository;
+import com.samsam.repository.TagRepository;
 import com.samsam.repository.UserRepository;
 import com.samsam.vo.FollowId;
 import com.samsam.vo.FollowVO;
 import com.samsam.vo.PostVO;
 import com.samsam.vo.ProfileVO;
+import com.samsam.vo.TagVO;
 import com.samsam.vo.UserVO;
 
 @Service
@@ -29,6 +31,16 @@ public class CommunityService {
 	
 	@Autowired
 	UserRepository userRepo;
+	
+	@Autowired
+	TagRepository tagRepo;
+	
+	//tag리스트 불러오기
+	public List<TagVO> tagListHighTen() {
+		List<TagVO> tagList = tagRepo.findAllHighTen();
+		
+		return tagList;
+	}
 	
 	//팔로우 취소하기
 	public void followCancel(int owner, int user) {

@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.samsam.service.CommunityService;
 import com.samsam.vo.FollowVO;
 import com.samsam.vo.ProfileVO;
+import com.samsam.vo.TagVO;
 
 @RestController
 @RequestMapping("/commu")
@@ -25,6 +26,11 @@ public class CommunityRestController {
 	
 	@Autowired
 	CommunityService communityService;
+	
+	@GetMapping(value="/tagListHighTen")
+	public List<TagVO> tagListHighTen() {
+		return communityService.tagListHighTen();
+	}
 	
 	@DeleteMapping(value="/followcancel")
 	public ResponseEntity<?> followCancel(

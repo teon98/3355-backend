@@ -51,6 +51,15 @@ public class TaeyoungTest {
 	@Autowired
 	GoodRepository goodRepo;
 	
+	@Test
+	void test20() {
+		List<TagVO> tagList = tagRepo.findAllHighTen();
+		
+		for(TagVO tag : tagList) {
+			System.out.println(tag);
+		}
+	}
+	
 //	@Test
 //	void test19() {
 //		PostVO post = postRepo.findById(26).get();
